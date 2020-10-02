@@ -1,5 +1,6 @@
 package io.github.monthalcantara.nossobancodigital.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.br.CPF;
@@ -9,6 +10,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -24,6 +26,6 @@ public class ClienteDTO implements Serializable {
     private String email;
     @NotEmpty(message = " A CNH do Cliente é obrigatória")
     private String cnh;
-    @DateTimeFormat(pattern = "MM/dd/yyyy")
-    private LocalDate DataDeNascimento;
+
+    private Date DataDeNascimento;
 }

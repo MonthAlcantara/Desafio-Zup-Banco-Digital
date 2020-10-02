@@ -9,19 +9,20 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface ClienteService {
-    Page<Cliente> busqueTodosClientes(Pageable pageable);
+    Page<ClienteResponseDTO>  busqueTodosClientes(Pageable pageable);
 
-    ClienteResponseDTO atualizeClientePeloId(Long id, ClienteDTO cliente);
+    Cliente atualizeClientePeloId(Long id, ClienteDTO cliente);
 
-    ClienteResponseDTO busqueClientePeloId(Long id);
+    Cliente busqueClientePeloId(Long id);
 
-    ClienteResponseDTO busqueClientePeloCPF(String cpf);
+    Cliente busqueClientePeloCPF(String cpf);
 
-    ClienteResponseDTO busqueClientePelaCNH(String cnh);
+    Cliente busqueClientePelaCNH(String cnh);
 
     Page<ClienteResponseDTO> busqueClientePeloNome(String name, Pageable pageable);
 
-    ClienteResponseDTO salve(ClienteDTO cliente);
+    Cliente salve(ClienteDTO cliente);
 
-    void deleteClientePeloId(Integer id);
+    void deleteClientePeloId(Long id);
+
 }

@@ -2,6 +2,7 @@ package io.github.monthalcantara.nossobancodigital.controller;
 
 import io.github.monthalcantara.nossobancodigital.dto.request.ClienteDTO;
 import io.github.monthalcantara.nossobancodigital.dto.response.ClienteResponseDTO;
+import io.github.monthalcantara.nossobancodigital.mappers.ClienteMapper;
 import io.github.monthalcantara.nossobancodigital.model.Cliente;
 import io.github.monthalcantara.nossobancodigital.service.interfaces.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,35 +21,48 @@ public class ClienteController {
 
     @Autowired
     private ClienteService clienteService;
+
+    @Autowired
+    ClienteMapper clienteMapper;
+
     @GetMapping
-    public Page<Cliente> buscaTodosCliente(Pageable pageable){
+    public Page<ClienteResponseDTO> busqueTodosCliente(@PageableDefault(size = 5) Pageable pageable) {
+
         return clienteService.busqueTodosClientes(pageable);
-    }
-    @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ClienteResponseDTO updateById(@PathVariable Long id,
-                                         @RequestBody @Valid ClienteDTO cliente) {
-        return clienteService.atualizeClientePeloId(id, cliente);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClienteResponseDTO> findById(@PathVariable Long id) {
-
-        return ResponseEntity.ok(clienteService.busqueClientePeloId(id));
+    public ResponseEntity<ClienteResponseDTO> busqueClientePeloId(@PathVariable Long id) {
+        Cliente clienteEncontrado = clienteService.busqueClientePeloId(id);
+        return ResponseEntity.ok(converteParaClienteResponseDTO(clienteEncontrado));
     }
 
     @GetMapping("/byName/{name}")
-    public ResponseEntity<Page<ClienteResponseDTO>> findByName(@PathVariable String name, @PageableDefault(size = 5) Pageable pageable) {
-        return new ResponseEntity<Page<ClienteResponseDTO>>(clienteService.busqueClientePeloNome(name, pageable), HttpStatus.OK);
+    public ResponseEntity<Page<ClienteResponseDTO>> busqueClientePeloNome(@PathVariable String name, @PageableDefault(size = 5) Pageable pageable) {
+        return new ResponseEntity<>(clienteService.busqueClientePeloNome(name, pageable), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<ClienteResponseDTO> save(@RequestBody @Valid ClienteDTO client) {
-        return new ResponseEntity<>(clienteService.salve(client), HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<ClienteResponseDTO> salveCliente(@RequestBody @Valid ClienteDTO client) {
+        Cliente clienteAtualizado = clienteService.salve(client);
+        return new ResponseEntity<>( converteParaClienteResponseDTO(clienteAtualizado), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ClienteResponseDTO atualizeClientePeloId(@PathVariable Long id, @RequestBody @Valid ClienteDTO cliente) {
+        Cliente clienteEncontrado = clienteService.atualizeClientePeloId(id, cliente);
+        return converteParaClienteResponseDTO(clienteEncontrado);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable Integer id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteClientePeloId(@PathVariable Long id) {
         clienteService.deleteClientePeloId(id);
     }
+
+    private ClienteResponseDTO converteParaClienteResponseDTO(Cliente cliente) {
+        return clienteMapper.converteParaClienteResponseDTO(cliente);
+    }
 }
+

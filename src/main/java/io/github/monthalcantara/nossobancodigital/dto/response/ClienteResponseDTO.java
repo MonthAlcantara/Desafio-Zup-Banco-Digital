@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -22,5 +23,5 @@ public class ClienteResponseDTO implements Serializable {
 
     private String cnh;
 
-    private LocalDate DataDeNascimento;
+    private Date DataDeNascimento;
 }
