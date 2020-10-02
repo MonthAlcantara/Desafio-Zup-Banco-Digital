@@ -1,14 +1,17 @@
 package io.github.monthalcantara.nossobancodigital.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -21,7 +24,7 @@ public class Cliente {
     private Long id;
 
     @NotEmpty(message = " O nome do Cliente é obrigatório")
-    @Column(length = 20, unique = true, nullable = false)
+    @Column(length = 20, nullable = false)
     private String nome;
 
     @NotEmpty(message = " O Sobrenome do Cliente é obrigatório")
@@ -29,16 +32,16 @@ public class Cliente {
     private String sobrenome;
 
     @CPF(message = " CPF inválido")
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String cpf;
 
     @Email
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String email;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String cnh;
 
-    private LocalDate DataDeNascimento;
+    private Date DataDeNascimento;
 
 }
