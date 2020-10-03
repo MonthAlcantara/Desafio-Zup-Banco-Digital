@@ -3,7 +3,6 @@ package io.github.monthalcantara.nossobancodigital.service.implementacoes;
 import io.github.monthalcantara.nossobancodigital.dto.request.ClienteDTO;
 import io.github.monthalcantara.nossobancodigital.dto.response.ClienteResponseDTO;
 import io.github.monthalcantara.nossobancodigital.exception.RecursoNaoEncontradoException;
-import io.github.monthalcantara.nossobancodigital.exception.ViolacaoRegraNegocioException;
 import io.github.monthalcantara.nossobancodigital.mappers.ClienteMapper;
 import io.github.monthalcantara.nossobancodigital.model.Cliente;
 import io.github.monthalcantara.nossobancodigital.repository.ClienteRepository;
@@ -16,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
+import static java.time.format.DateTimeFormatter.ofPattern;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
@@ -70,10 +71,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public Cliente salve(ClienteDTO clienteDTO) {
         Cliente cliente = converteParaCliente(clienteDTO);
-        if(verifiqueSeDadosJaExistem(cliente)){
-            return clienteRepository.save(cliente);
-        }
-        throw new ViolacaoRegraNegocioException("Já existe um cadastro com os dados passados");
+        return clienteRepository.save(cliente);
     }
 
     @Override
@@ -100,16 +98,16 @@ public class ClienteServiceImpl implements ClienteService {
         return clienteOptional.orElseThrow(() -> new RecursoNaoEncontradoException("Não existe cliente cadastrado com o id: " + id));
     }
 
-    private Boolean verifiqueSeDadosJaExistem(Cliente cliente){
-        if (clienteRepository.findByCnh(cliente.getCnh()).isPresent()){
-            throw new  ViolacaoRegraNegocioException("Já existe um cadastro com o CNH informado: " + cliente.getCnh());
-                    }
-        if(clienteRepository.findByCpf(cliente.getCpf()).isPresent()){
-            throw new  ViolacaoRegraNegocioException("Já existe um cadastro com o CPF informado: " + cliente.getCpf());
-        }
-        if(clienteRepository.findByEmail(cliente.getEmail()).isPresent()){
-            throw new  ViolacaoRegraNegocioException("Já existe um cadastro com o E-mail informado: " + cliente.getEmail());
-        }
-        return true;
-    }
+//    private Boolean verifiqueSeDadosJaExistem(Cliente cliente){
+//        if (clienteRepository.findByCnh(cliente.getCnh()).isPresent()){
+//            throw new  ViolacaoRegraNegocioException("Já existe um cadastro com o CNH informado: " + cliente.getCnh());
+//                    }
+//        if(clienteRepository.findByCpf(cliente.getCpf()).isPresent()){
+//            throw new  ViolacaoRegraNegocioException("Já existe um cadastro com o CPF informado: " + cliente.getCpf());
+//        }
+//        if(clienteRepository.findByEmail(cliente.getEmail()).isPresent()){
+//            throw new  ViolacaoRegraNegocioException("Já existe um cadastro com o E-mail informado: " + cliente.getEmail());
+//        }
+//        return true;
+//    }
 }

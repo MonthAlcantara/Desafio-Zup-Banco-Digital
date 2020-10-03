@@ -10,8 +10,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
+
+import static java.time.format.DateTimeFormatter.ofPattern;
 
 @Data
 @NoArgsConstructor
@@ -42,6 +45,6 @@ public class Cliente {
     @Column(nullable = false)
     private String cnh;
 
-    private Date DataDeNascimento;
+    private LocalDate dataDeNascimento;
 
 }

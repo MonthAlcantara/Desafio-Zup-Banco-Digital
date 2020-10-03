@@ -23,5 +23,5 @@ public class ClienteResponseDTO implements Serializable {
 
     private String cnh;
 
-    private Date DataDeNascimento;
+    private LocalDate dataDeNascimento;
 }
