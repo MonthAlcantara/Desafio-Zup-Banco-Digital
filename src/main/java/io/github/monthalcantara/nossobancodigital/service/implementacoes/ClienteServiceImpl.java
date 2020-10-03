@@ -5,6 +5,7 @@ import io.github.monthalcantara.nossobancodigital.dto.response.ClienteResponseDT
 import io.github.monthalcantara.nossobancodigital.exception.RecursoNaoEncontradoException;
 import io.github.monthalcantara.nossobancodigital.mappers.ClienteMapper;
 import io.github.monthalcantara.nossobancodigital.model.Cliente;
+import io.github.monthalcantara.nossobancodigital.model.Endereco;
 import io.github.monthalcantara.nossobancodigital.repository.ClienteRepository;
 import io.github.monthalcantara.nossobancodigital.service.interfaces.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,8 +69,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
 
-    @Override
-    public Cliente salve(ClienteDTO clienteDTO) {
+    public Cliente salveNovoCliente(ClienteDTO clienteDTO) {
         Cliente cliente = converteParaCliente(clienteDTO);
         return clienteRepository.save(cliente);
     }
@@ -78,6 +78,12 @@ public class ClienteServiceImpl implements ClienteService {
     public void deleteClientePeloId(Long id) {
        Cliente clienteEncontrado = retorneSeExistirClienteComId(id);
        clienteRepository.delete(clienteEncontrado);
+    }
+
+    @Override
+    public void salveEnderecoCliente(Cliente cliente, Endereco endereco) {
+        cliente.setEndereco(endereco);
+        clienteRepository.save(cliente);
     }
 
     private Cliente converteParaCliente(ClienteDTO cliente){
@@ -98,16 +104,4 @@ public class ClienteServiceImpl implements ClienteService {
         return clienteOptional.orElseThrow(() -> new RecursoNaoEncontradoException("Não existe cliente cadastrado com o id: " + id));
     }
 
-//    private Boolean verifiqueSeDadosJaExistem(Cliente cliente){
-//        if (clienteRepository.findByCnh(cliente.getCnh()).isPresent()){
-//            throw new  ViolacaoRegraNegocioException("Já existe um cadastro com o CNH informado: " + cliente.getCnh());
-//                    }
-//        if(clienteRepository.findByCpf(cliente.getCpf()).isPresent()){
-//            throw new  ViolacaoRegraNegocioException("Já existe um cadastro com o CPF informado: " + cliente.getCpf());
-//        }
-//        if(clienteRepository.findByEmail(cliente.getEmail()).isPresent()){
-//            throw new  ViolacaoRegraNegocioException("Já existe um cadastro com o E-mail informado: " + cliente.getEmail());
-//        }
-//        return true;
-//    }
 }
