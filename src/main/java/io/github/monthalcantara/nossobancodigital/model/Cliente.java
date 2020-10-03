@@ -1,20 +1,14 @@
 package io.github.monthalcantara.nossobancodigital.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.br.CPF;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
-
-import static java.time.format.DateTimeFormatter.ofPattern;
 
 @Data
 @NoArgsConstructor
@@ -46,5 +40,7 @@ public class Cliente {
     private String cnh;
 
     private LocalDate dataDeNascimento;
+
+    private Endereco endereco;
 
 }

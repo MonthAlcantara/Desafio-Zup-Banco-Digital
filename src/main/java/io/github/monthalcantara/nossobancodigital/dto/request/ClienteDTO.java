@@ -1,5 +1,6 @@
 package io.github.monthalcantara.nossobancodigital.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.github.monthalcantara.nossobancodigital.validation.annotations.UnicoCNH;
 import io.github.monthalcantara.nossobancodigital.validation.annotations.UnicoCPF;
@@ -43,8 +44,9 @@ public class ClienteDTO implements Serializable {
     @Size(max = 11, min = 11, message = "Digite um CNH válido")
     private String cnh;
 
-//    @Past(message = "A data informada deve ser menor que a data atual")
-@DateTimeFormat(pattern = "yyyy-MM-dd")
+    //    @Past(message = "A data informada deve ser menor que a data atual")
+    @JsonFormat
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
 //    @Temporal(TemporalType.DATE)
     private LocalDate dataDeNascimento;
 
