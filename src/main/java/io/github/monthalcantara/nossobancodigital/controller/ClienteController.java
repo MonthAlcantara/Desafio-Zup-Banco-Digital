@@ -9,14 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.net.URI;
+
+import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
-@RequestMapping("api/v1/clientes")
+@RequestMapping("v1/cliente")
 public class ClienteController {
 
     @Autowired
@@ -37,16 +42,21 @@ public class ClienteController {
         return ResponseEntity.ok(converteParaClienteResponseDTO(clienteEncontrado));
     }
 
-    @GetMapping("/byName/{name}")
+    @GetMapping("/nome/{nome}")
     public ResponseEntity<Page<ClienteResponseDTO>> busqueClientePeloNome(@PathVariable String name, @PageableDefault(size = 5) Pageable pageable) {
         return new ResponseEntity<>(clienteService.busqueClientePeloNome(name, pageable), HttpStatus.OK);
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ClienteResponseDTO> salveCliente(@RequestBody @Valid ClienteDTO client) {
-        Cliente clienteAtualizado = clienteService.salve(client);
-        return new ResponseEntity<>( converteParaClienteResponseDTO(clienteAtualizado), HttpStatus.CREATED);
+        Cliente clienteAtualizado = clienteService.salveNovoCliente(client);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(clienteAtualizado.getId())
+                .toUri();
+       // return new ResponseEntity<>( converteParaClienteResponseDTO(clienteAtualizado), HttpStatus.CREATED).;
+    return ResponseEntity.status(CREATED).header(HttpHeaders.LOCATION, String.valueOf(location)).build();
     }
 
     @PutMapping("/{id}")
