@@ -9,7 +9,6 @@ import java.io.Serializable;
 @Setter
 public class EnderecoResponseDTO implements Serializable {
 
-
     private String cep;
 
     private String rua;
