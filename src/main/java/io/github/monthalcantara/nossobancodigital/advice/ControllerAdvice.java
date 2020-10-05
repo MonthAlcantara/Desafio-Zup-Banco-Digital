@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MultipartException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +17,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(RecursoNaoEncontradoException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrosApi recursoNaoEncontrado(RecursoNaoEncontradoException e) {
+    public ErrosApi recursoNaoEncontradoException(RecursoNaoEncontradoException e) {
         return new ErrosApi(e.getMessage());
     }
 
@@ -31,10 +32,16 @@ public class ControllerAdvice {
         return new ErrosApi(listErrors);
     }
 
+    @ExceptionHandler(MultipartException.class)
+    public ErrosApi tamanhoMaximoArquivoException(MultipartException e) {
+        return new ErrosApi(e.getMessage());
+
+    }
+
     @ExceptionHandler(ViolacaoRegraNegocioException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrosApi violacaoRegraNegocio(ViolacaoRegraNegocioException e) {
-            return new ErrosApi(e.getMessage());
-        }
+    public ErrosApi violacaoRegraNegocioException(ViolacaoRegraNegocioException e) {
+        return new ErrosApi(e.getMessage());
+    }
 
 }
