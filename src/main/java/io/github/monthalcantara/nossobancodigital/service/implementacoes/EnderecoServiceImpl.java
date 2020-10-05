@@ -62,8 +62,8 @@ public class EnderecoServiceImpl implements EnderecoService {
 
     @Override
     public Endereco atualizeEnderecoSeExistir(Long id, EnderecoDTO enderecoDTO) {
-        Endereco endereco = converteParaEndereco(enderecoDTO);
         Endereco enderecoEncontrado = retorneSeExistirEnderecoComId(id);
+        Endereco endereco = converteParaEndereco(enderecoDTO);
         enderecoEncontrado.setBairro(endereco.getBairro());
         enderecoEncontrado.setCep(endereco.getCep());
         enderecoEncontrado.setCidade(endereco.getCidade());
@@ -95,8 +95,9 @@ public class EnderecoServiceImpl implements EnderecoService {
         return enderecoMapper.converteParaListaEnderecoResponseDTO(listaEndereco);
     }
 
-    private Page<EnderecoResponseDTO> converteParaPageEnderecoResponseDTO(Page<Endereco> paginaEnderecos, Pageable pageable){
+    private Page<EnderecoResponseDTO> converteParaPageEnderecoResponseDTO(Page<Endereco> paginaEnderecos, Pageable pageable) {
         List<EnderecoResponseDTO> dtos = converteParaListaEnderecoResponseDTO(paginaEnderecos.getContent());
         return new PageImpl<>(dtos, pageable, paginaEnderecos.getTotalElements());
     }
+
 }

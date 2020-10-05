@@ -1,10 +1,8 @@
 package io.github.monthalcantara.nossobancodigital.controller;
 
 import io.github.monthalcantara.nossobancodigital.dto.request.EnderecoDTO;
-import io.github.monthalcantara.nossobancodigital.dto.response.ClienteResponseDTO;
 import io.github.monthalcantara.nossobancodigital.dto.response.EnderecoResponseDTO;
 import io.github.monthalcantara.nossobancodigital.mappers.EnderecoMapper;
-import io.github.monthalcantara.nossobancodigital.model.Cliente;
 import io.github.monthalcantara.nossobancodigital.model.Endereco;
 import io.github.monthalcantara.nossobancodigital.service.interfaces.EnderecoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("v1/endereco")
+@RequestMapping("v1/admin/endereco")
 public class EnderecoController {
 
     @Autowired
@@ -34,14 +32,20 @@ public class EnderecoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<EnderecoResponseDTO> busqueEnderecoPeloId(@PathVariable Long id) {
-        Endereco enderecoEncontrado = enderecoService.busqueEnderecoPeloId(id);
-        return ResponseEntity.ok(converteParaEnderecoResponseDTO(enderecoEncontrado));
+        Endereco enderecoEncontradoPeloId = enderecoService.busqueEnderecoPeloId(id);
+        return ResponseEntity.ok(converteParaEnderecoResponseDTO(enderecoEncontradoPeloId));
+    }
+
+    @GetMapping("/{cep}")
+    public ResponseEntity<EnderecoResponseDTO> busqueEnderecoPeloCep(@PathVariable String cep) {
+        Endereco enderecoEncontradoPeloCep = enderecoService.busqueEnderecoPeloCep(cep);
+        return ResponseEntity.ok(converteParaEnderecoResponseDTO(enderecoEncontradoPeloCep));
     }
 
     @PutMapping("/{id}")
-    public EnderecoResponseDTO atualizeEnderecoPeloId(@PathVariable Long id, @RequestBody @Valid EnderecoDTO endereco) {
+    public ResponseEntity<EnderecoResponseDTO> atualizeEnderecoPeloId(@PathVariable Long id, @RequestBody @Valid EnderecoDTO endereco) {
         Endereco enderecoAtualizado = enderecoService.atualizeEnderecoSeExistir(id, endereco);
-        return converteParaEnderecoResponseDTO(enderecoAtualizado);
+        return ResponseEntity.ok(converteParaEnderecoResponseDTO(enderecoAtualizado));
     }
 
     @DeleteMapping("/{id}")
