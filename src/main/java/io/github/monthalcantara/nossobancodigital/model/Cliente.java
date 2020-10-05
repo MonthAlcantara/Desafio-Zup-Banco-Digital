@@ -41,6 +41,13 @@ public class Cliente {
 
     private LocalDate dataDeNascimento;
 
+    @OneToOne
+    @JoinColumn(name = "endereco_id")
     private Endereco endereco;
+
+    private String fotoDocumentoFrente;
+
+    private String fotoDocumentoVerso;
+
 
 }
