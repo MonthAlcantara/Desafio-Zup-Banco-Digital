@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,27 +102,39 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public void salveArquivosDocumentoCliente(String diretorio, Long id, MultipartFile arquivoFrente, MultipartFile arquivoVerso) {
+    public List<String> salveArquivosDocumentoCliente(String diretorio, Long id, MultipartFile arquivoFrente, MultipartFile arquivoVerso) {
 
         Cliente cliente = busqueClientePeloId(id);
 
-        Path diretorioPath = Paths.get(diretorio);
+        retorneSeExistirEnderecoParaClienteComId(id);
 
-        String novoNomeArquivoFrente = arquivoFrente.getOriginalFilename().replace(arquivoFrente.getOriginalFilename(), "cliente_" + id + "_Frente");
-        String novoNomeArquivoVerso = arquivoVerso.getOriginalFilename().replace(arquivoVerso.getOriginalFilename(), "cliente_" + id + "_Verso");
+        List<String> arquivos = new ArrayList<>();
+        Path diretorioPath = Paths.get(diretorio, "cliente_" + id);
 
-        Path arquivoPathFrente = diretorioPath.resolve(novoNomeArquivoFrente);
-        Path arquivoPathVerso = diretorioPath.resolve(novoNomeArquivoVerso);
+        String nomeArquivoFrente = arquivoFrente.getOriginalFilename();
+        String nomeArquivoVerso = arquivoVerso.getOriginalFilename();
+
+        Path arquivoPathFrente = diretorioPath.resolve(nomeArquivoFrente);
+        Path arquivoPathVerso = diretorioPath.resolve(nomeArquivoVerso);
         try {
 
             Files.createDirectories(diretorioPath);
             arquivoFrente.transferTo(arquivoPathFrente.toFile());
             arquivoVerso.transferTo(arquivoPathVerso.toFile());
-            salveDocumentosCliente(cliente, novoNomeArquivoFrente, novoNomeArquivoVerso);
+            salveDocumentosCliente(cliente, nomeArquivoFrente, nomeArquivoVerso);
 
         } catch (IOException e) {
             throw new RuntimeException("Problemas na tentativa de salvar arquivo: ", e);
         }
+        arquivos.add(diretorioPath.toString() + "/" + nomeArquivoFrente);
+        arquivos.add(diretorioPath.toString() + "/" + nomeArquivoVerso);
+        arquivos.forEach(System.out::println);
+        return arquivos;
+    }
+
+    public String busqueLocalizacaoDocumento(String diretorio, Long id, String nomeDoArquivo){
+        Path diretorioPath = Paths.get(diretorio, "cliente_" + id);
+        return  diretorioPath.toString() + "/" + nomeDoArquivo;
     }
 
     private Cliente converteParaCliente(ClienteDTO cliente) {
@@ -142,10 +155,11 @@ public class ClienteServiceImpl implements ClienteService {
         return clienteOptional.orElseThrow(() -> new RecursoNaoEncontradoException("Não existe cliente cadastrado com o id: " + id));
     }
 
+    //Atualizar
     private Endereco retorneSeExistirEnderecoParaClienteComId(Long id) {
         Cliente cliente = retorneSeExistirClienteComId(id);
-        Endereco enderecoEncontrado = enderecoService.busqueEnderecoPeloId(cliente.getEndereco().getId());
-        return enderecoEncontrado;
+        Optional<Endereco> enderecoOptional = clienteRepository.findEnderecoIdById(id);
+        return enderecoOptional.orElseThrow(() -> new RecursoNaoEncontradoException("O cliente de id " + id + "Não possui endereço cadastrado"));
     }
 
 }

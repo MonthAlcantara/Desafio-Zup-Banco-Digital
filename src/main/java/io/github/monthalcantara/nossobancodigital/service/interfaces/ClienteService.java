@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface ClienteService {
     Page<ClienteResponseDTO> busqueTodosClientes(Pageable pageable);
 
@@ -29,6 +31,6 @@ public interface ClienteService {
 
     void salveDocumentosCliente(Cliente cliente, String docFrente, String docVerso);
 
-    void salveArquivosDocumentoCliente(String diretorio, Long id, MultipartFile arquivoFrente, MultipartFile arquivoVerso);
+    List<String> salveArquivosDocumentoCliente(String diretorio, Long id, MultipartFile arquivoFrente, MultipartFile arquivoVerso);
 
 }
