@@ -21,25 +21,25 @@ import java.net.URI;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
-@RequestMapping("v1/cliente")
+@RequestMapping("v1/admin/cliente")
 public class ClienteController {
 
     @Autowired
-    private ClienteService clienteService;
+    ClienteService clienteService;
 
     @Autowired
     ClienteMapper clienteMapper;
 
     @GetMapping
-    public Page<ClienteResponseDTO> busqueTodosCliente(@PageableDefault(size = 5) Pageable pageable) {
+    public Page<ClienteResponseDTO> busqueTodosClientes(@PageableDefault(size = 5) Pageable pageable) {
 
         return clienteService.busqueTodosClientes(pageable);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ClienteResponseDTO> busqueClientePeloId(@PathVariable Long id) {
-        Cliente clienteEncontrado = clienteService.busqueClientePeloId(id);
-        return ResponseEntity.ok(converteParaClienteResponseDTO(clienteEncontrado));
+        Cliente clienteEncontradoPeloId = clienteService.busqueClientePeloId(id);
+        return ResponseEntity.ok(converteParaClienteResponseDTO(clienteEncontradoPeloId));
     }
 
     @GetMapping("/nome/{nome}")
@@ -55,8 +55,8 @@ public class ClienteController {
                 .path("/{id}")
                 .buildAndExpand(clienteAtualizado.getId())
                 .toUri();
-       // return new ResponseEntity<>( converteParaClienteResponseDTO(clienteAtualizado), HttpStatus.CREATED).;
-    return ResponseEntity.status(CREATED).header(HttpHeaders.LOCATION, String.valueOf(location)).build();
+        // return new ResponseEntity<>( converteParaClienteResponseDTO(clienteAtualizado), HttpStatus.CREATED).;
+        return ResponseEntity.status(CREATED).header(HttpHeaders.LOCATION, String.valueOf(location)).build();
     }
 
     @PutMapping("/{id}")

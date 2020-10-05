@@ -8,21 +8,28 @@ import io.github.monthalcantara.nossobancodigital.model.Cliente;
 import io.github.monthalcantara.nossobancodigital.model.Endereco;
 import io.github.monthalcantara.nossobancodigital.repository.ClienteRepository;
 import io.github.monthalcantara.nossobancodigital.service.interfaces.ClienteService;
+import io.github.monthalcantara.nossobancodigital.service.interfaces.EnderecoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
-
-import static java.time.format.DateTimeFormatter.ofPattern;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
     @Autowired
     ClienteRepository clienteRepository;
+
+    @Autowired
+    EnderecoService enderecoService;
 
     @Autowired
     ClienteMapper clienteMapper;
@@ -76,8 +83,8 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public void deleteClientePeloId(Long id) {
-       Cliente clienteEncontrado = retorneSeExistirClienteComId(id);
-       clienteRepository.delete(clienteEncontrado);
+        Cliente clienteEncontrado = retorneSeExistirClienteComId(id);
+        clienteRepository.delete(clienteEncontrado);
     }
 
     @Override
@@ -86,7 +93,38 @@ public class ClienteServiceImpl implements ClienteService {
         clienteRepository.save(cliente);
     }
 
-    private Cliente converteParaCliente(ClienteDTO cliente){
+    @Override
+    public void salveDocumentosCliente(Cliente cliente, String docFrente, String docVerso) {
+        cliente.setFotoDocumentoFrente(docFrente);
+        cliente.setFotoDocumentoVerso(docVerso);
+        clienteRepository.save(cliente);
+    }
+
+    @Override
+    public void salveArquivosDocumentoCliente(String diretorio, Long id, MultipartFile arquivoFrente, MultipartFile arquivoVerso) {
+
+        Cliente cliente = busqueClientePeloId(id);
+
+        Path diretorioPath = Paths.get(diretorio);
+
+        String novoNomeArquivoFrente = arquivoFrente.getOriginalFilename().replace(arquivoFrente.getOriginalFilename(), "cliente_" + id + "_Frente");
+        String novoNomeArquivoVerso = arquivoVerso.getOriginalFilename().replace(arquivoVerso.getOriginalFilename(), "cliente_" + id + "_Verso");
+
+        Path arquivoPathFrente = diretorioPath.resolve(novoNomeArquivoFrente);
+        Path arquivoPathVerso = diretorioPath.resolve(novoNomeArquivoVerso);
+        try {
+
+            Files.createDirectories(diretorioPath);
+            arquivoFrente.transferTo(arquivoPathFrente.toFile());
+            arquivoVerso.transferTo(arquivoPathVerso.toFile());
+            salveDocumentosCliente(cliente, novoNomeArquivoFrente, novoNomeArquivoVerso);
+
+        } catch (IOException e) {
+            throw new RuntimeException("Problemas na tentativa de salvar arquivo: ", e);
+        }
+    }
+
+    private Cliente converteParaCliente(ClienteDTO cliente) {
         return clienteMapper.converteParaCliente(cliente);
     }
 
@@ -94,14 +132,20 @@ public class ClienteServiceImpl implements ClienteService {
         return clienteMapper.converteParaListaClienteResponseDTO(listaClientes);
     }
 
-    private Page<ClienteResponseDTO> converteParaPageClienteResponseDTO(Page<Cliente> paginaClientes, Pageable pageable){
+    private Page<ClienteResponseDTO> converteParaPageClienteResponseDTO(Page<Cliente> paginaClientes, Pageable pageable) {
         List<ClienteResponseDTO> dtos = converteParaListaClienteResponseDTO(paginaClientes.getContent());
         return new PageImpl<>(dtos, pageable, paginaClientes.getTotalElements());
     }
 
-    private Cliente retorneSeExistirClienteComId(Long id){
+    private Cliente retorneSeExistirClienteComId(Long id) {
         Optional<Cliente> clienteOptional = clienteRepository.findById(id);
         return clienteOptional.orElseThrow(() -> new RecursoNaoEncontradoException("Não existe cliente cadastrado com o id: " + id));
+    }
+
+    private Endereco retorneSeExistirEnderecoParaClienteComId(Long id) {
+        Cliente cliente = retorneSeExistirClienteComId(id);
+        Endereco enderecoEncontrado = enderecoService.busqueEnderecoPeloId(cliente.getEndereco().getId());
+        return enderecoEncontrado;
     }
 
 }

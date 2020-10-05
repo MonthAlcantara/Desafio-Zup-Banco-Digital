@@ -2,13 +2,13 @@ package io.github.monthalcantara.nossobancodigital.controller;
 
 import io.github.monthalcantara.nossobancodigital.dto.request.ClienteDTO;
 import io.github.monthalcantara.nossobancodigital.dto.request.EnderecoDTO;
-import io.github.monthalcantara.nossobancodigital.dto.response.ClienteResponseDTO;
 import io.github.monthalcantara.nossobancodigital.mappers.ClienteMapper;
 import io.github.monthalcantara.nossobancodigital.model.Cliente;
 import io.github.monthalcantara.nossobancodigital.model.Endereco;
 import io.github.monthalcantara.nossobancodigital.service.interfaces.ClienteService;
 import io.github.monthalcantara.nossobancodigital.service.interfaces.EnderecoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +19,14 @@ import javax.validation.Valid;
 import java.net.URI;
 
 import static org.springframework.http.HttpStatus.CREATED;
+
 @RestController
 @RequestMapping("v1/cadastro")
 public class CadastroClienteController {
+
+    @Value("${caminho-arquivos-pasta}")
+    String diretorioArquivos;
+
     @Autowired
     private ClienteService clienteService;
 
@@ -47,13 +52,17 @@ public class CadastroClienteController {
     }
 
     @PostMapping("cliente/{id}/endereco/arquivo")
-    public ResponseEntity salveDocumento(@RequestBody MultipartFile fotoDocumentoFrente, MultipartFile fotoDocumentoVerso, @PathVariable("id") Long id) {
-        Cliente clienteAtualizado = clienteService.busqueClientePeloId(id);
-        URI location = geradorLocation(id, "/arquivo");
+    public ResponseEntity salveDocumento(@RequestParam("frente") MultipartFile fotoDocumentoFrente,
+                                         @RequestParam("verso") MultipartFile fotoDocumentoVerso,
+                                         @PathVariable("id") Long id) {
+        clienteService.salveArquivosDocumentoCliente(diretorioArquivos, id, fotoDocumentoFrente, fotoDocumentoVerso);
+        URI location = geradorLocation(id, "/aceite");
         return ResponseEntity.status(CREATED).header(HttpHeaders.LOCATION, String.valueOf(location)).build();
+
     }
 
-    private URI geradorLocation(Long id, String proximoPassoCadastro){
+
+    private URI geradorLocation(Long id, String proximoPassoCadastro) {
         Cliente clienteAtualizado = clienteService.busqueClientePeloId(id);
         return ServletUriComponentsBuilder
                 .fromCurrentRequest()
