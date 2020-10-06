@@ -1,12 +1,16 @@
 package io.github.monthalcantara.nossobancodigital.model;
 
+import io.github.monthalcantara.nossobancodigital.exception.ViolacaoRegraNegocioException;
 import lombok.*;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Past;
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -36,6 +40,7 @@ public class Cliente {
     @Column(nullable = false)
     private String cnh;
 
+    @Past(message = "A data informada deve ser menor que a data atual")
     private LocalDate dataDeNascimento;
 
     @OneToOne
@@ -47,5 +52,21 @@ public class Cliente {
     private DocumentoCliente documentoCliente;
 
 
+    public String getDataDeNascimento() {
+        return dataDeNascimento.toString();
+    }
 
+    public void setDataDeNascimento(String dataDeNascimento) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate data = LocalDate.parse(dataDeNascimento, formatter);
+        LocalDate agora = LocalDate.now();
+        if(Period.between(data, agora).isNegative() || Period.between(data, agora).equals(agora) ){
+            throw new ViolacaoRegraNegocioException("Escolha uma data no passado");
+        }else if (Period.between(data, agora).toTotalMonths() >= 216) {
+            this.dataDeNascimento = data;
+        } else {
+            System.out.println(Period.between(data, agora).toTotalMonths());
+            throw new ViolacaoRegraNegocioException("Você precisa ser maior de idade para abrir conta no nosso banco");
+        }
+    }
 }

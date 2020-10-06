@@ -1,5 +1,6 @@
 package io.github.monthalcantara.nossobancodigital.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.github.monthalcantara.nossobancodigital.model.DocumentoCliente;
 import lombok.Getter;
@@ -23,8 +24,8 @@ public class ClienteResponseDTO implements Serializable {
     private String email;
 
     private String cnh;
-
-    private LocalDate dataDeNascimento;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private String dataDeNascimento;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private EnderecoResponseDTO endereco;
