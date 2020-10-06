@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MultipartException;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,12 @@ public class ControllerAdvice {
                 .map(objectError -> objectError.getDefaultMessage())
                 .collect(Collectors.toList());
         return new ErrosApi(listErrors);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrosApi handleConstraintViolationException(ConstraintViolationException e) {
+        return new ErrosApi(e.getMessage());
     }
 
     @ExceptionHandler(MultipartException.class)
