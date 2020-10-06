@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.net.URI;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -73,11 +74,11 @@ public class CadastroClienteController {
 
     }
 
-    //Desenvolver
     @PostMapping("cliente/{id}/endereco/arquivo/aceite")
-    public ResponseEntity aceiteContrato(@RequestBody Boolean aceite) {
-
-        return ResponseEntity.status(CREATED).header(HttpHeaders.LOCATION, String.valueOf(null)).body(clienteService.busqueClientePeloId(null));
+    public String aceiteContrato(@PathVariable("id") Long id, @PathParam("aceite") Boolean aceite) {
+        Cliente cliente = clienteService.retorneSeExistirEnderecoParaClienteComId(id);
+        enderecoService.retorneSeExistirEnderecoComId(id);
+        return (aceite ? "Que ótima notícia " + cliente.getNome() + "!!! Iremos criar a sua conta" : "É uma pena " + cliente.getNome() + " =/ Vamos dar um tempo para você pensar melhor");
     }
 
 

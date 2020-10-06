@@ -88,8 +88,8 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Cliente retorneSeExistirEnderecoParaClienteComId(Long id) {
-       Cliente clienteEncontrado =  busqueClientePeloId(id);
-        Optional<Cliente> enderecoOptional =clienteRepository.findByEndereco(clienteEncontrado.getEndereco());//clienteRepository.findByEnderecoId(id);
+        Cliente clienteEncontrado = busqueClientePeloId(id);
+        Optional<Cliente> enderecoOptional = clienteRepository.findByEndereco(clienteEncontrado.getEndereco());
         return enderecoOptional.orElseThrow(() -> new RecursoNaoEncontradoException("O cliente de ID: " + id + " não possui endereço cadastrado"));
     }
 

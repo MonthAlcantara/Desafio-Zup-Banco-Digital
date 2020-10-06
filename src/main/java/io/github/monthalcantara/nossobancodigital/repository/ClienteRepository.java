@@ -22,7 +22,4 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
     Optional<Cliente> findByEndereco(Endereco endereco);
 
-
-
-
 }
