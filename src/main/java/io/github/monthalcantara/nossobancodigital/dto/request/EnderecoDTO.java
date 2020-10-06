@@ -1,35 +1,31 @@
 package io.github.monthalcantara.nossobancodigital.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class EnderecoDTO implements Serializable {
 
-    @NotEmpty
+    @NotEmpty(message = " Obrigatório informar o CEP do Cliente")
     private String cep;
 
-    @NotEmpty
+    @NotEmpty(message = " Obrigatório informar a Rua do Cliente")
     private String rua;
 
-    @NotEmpty
+    @NotEmpty(message = " Obrigatório informar o Bairro do Cliente")
     private String bairro;
 
-    @NotEmpty
+    @NotEmpty(message = " Por favor informe um complemento")
     private String complemento;
 
-    @NotEmpty
+    @NotEmpty(message = " Obrigatório informar a Cidade do Cliente")
     private String cidade;
 
-    @NotEmpty
+    @NotEmpty(message = " Obrigatório informar o estado do Cliente")
     private String estado;
 
 }
