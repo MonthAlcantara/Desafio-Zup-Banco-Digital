@@ -5,23 +5,15 @@ import io.github.monthalcantara.nossobancodigital.dto.response.ClienteResponseDT
 import io.github.monthalcantara.nossobancodigital.exception.RecursoNaoEncontradoException;
 import io.github.monthalcantara.nossobancodigital.mappers.ClienteMapper;
 import io.github.monthalcantara.nossobancodigital.model.Cliente;
-import io.github.monthalcantara.nossobancodigital.model.DocumentoCliente;
 import io.github.monthalcantara.nossobancodigital.model.Endereco;
 import io.github.monthalcantara.nossobancodigital.repository.ClienteRepository;
 import io.github.monthalcantara.nossobancodigital.service.interfaces.ClienteService;
-import io.github.monthalcantara.nossobancodigital.service.interfaces.EnderecoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,24 +40,25 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Cliente busqueClientePeloId(Long id) {
-        return retorneSeExistirClienteComId(id);
+        Optional<Cliente> clienteOptional = clienteRepository.findById(id);
+        return clienteOptional.orElseThrow(() -> new RecursoNaoEncontradoException("Não existe cliente cadastrado com o ID: " + id));
     }
 
     @Override
     public Cliente busqueClientePeloCPF(String cpf) {
         Optional<Cliente> clienteOptional = clienteRepository.findByCpf(cpf);
-        return clienteOptional.orElseThrow(() -> new RecursoNaoEncontradoException("Não existe cliente cadastrado com o cpf: " + cpf));
+        return clienteOptional.orElseThrow(() -> new RecursoNaoEncontradoException("Não existe cliente cadastrado com o CPF: " + cpf));
     }
 
     @Override
     public Cliente busqueClientePelaCNH(String cnh) {
         Optional<Cliente> clienteOptional = clienteRepository.findByCnh(cnh);
-        return clienteOptional.orElseThrow(() -> new RecursoNaoEncontradoException("Não existe cliente cadastrado com o cnh: " + cnh));
+        return clienteOptional.orElseThrow(() -> new RecursoNaoEncontradoException("Não existe cliente cadastrado com o CNH: " + cnh));
     }
 
     @Override
     public Cliente atualizeClientePeloId(Long id, ClienteDTO cliente) {
-        Cliente clienteEncontrado = retorneSeExistirClienteComId(id);
+        Cliente clienteEncontrado = busqueClientePeloId(id);
         clienteEncontrado.setCnh(cliente.getCnh());
         clienteEncontrado.setCpf(cliente.getCpf());
         clienteEncontrado.setDataDeNascimento(cliente.getDataDeNascimento());
@@ -75,7 +68,7 @@ public class ClienteServiceImpl implements ClienteService {
         return clienteRepository.save(clienteEncontrado);
     }
 
-
+    @Override
     public Cliente salveNovoCliente(ClienteDTO clienteDTO) {
         Cliente cliente = converteParaCliente(clienteDTO);
         return clienteRepository.save(cliente);
@@ -83,7 +76,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public void deleteClientePeloId(Long id) {
-        Cliente clienteEncontrado = retorneSeExistirClienteComId(id);
+        Cliente clienteEncontrado = busqueClientePeloId(id);
         clienteRepository.delete(clienteEncontrado);
     }
 
@@ -93,6 +86,12 @@ public class ClienteServiceImpl implements ClienteService {
         clienteRepository.save(cliente);
     }
 
+    @Override
+    public Cliente retorneSeExistirEnderecoParaClienteComId(Long id) {
+       Cliente clienteEncontrado =  busqueClientePeloId(id);
+        Optional<Cliente> enderecoOptional =clienteRepository.findByEndereco(clienteEncontrado.getEndereco());//clienteRepository.findByEnderecoId(id);
+        return enderecoOptional.orElseThrow(() -> new RecursoNaoEncontradoException("O cliente de ID: " + id + " não possui endereço cadastrado"));
+    }
 
     private Cliente converteParaCliente(ClienteDTO cliente) {
         return clienteMapper.converteParaCliente(cliente);
@@ -106,16 +105,4 @@ public class ClienteServiceImpl implements ClienteService {
         List<ClienteResponseDTO> dtos = converteParaListaClienteResponseDTO(paginaClientes.getContent());
         return new PageImpl<>(dtos, pageable, paginaClientes.getTotalElements());
     }
-
-    private Cliente retorneSeExistirClienteComId(Long id) {
-        Optional<Cliente> clienteOptional = clienteRepository.findById(id);
-        return clienteOptional.orElseThrow(() -> new RecursoNaoEncontradoException("Não existe cliente cadastrado com o id: " + id));
-    }
-
-    public Cliente retorneSeExistirEnderecoParaClienteComId(Long id) {
-        Cliente cliente = retorneSeExistirClienteComId(id);
-        Optional<Cliente> enderecoOptional = clienteRepository.findByEnderecoId(id);
-        return enderecoOptional.orElseThrow(() -> new RecursoNaoEncontradoException("O cliente de id: " + id + " não possui endereço cadastrado"));
-    }
-
 }

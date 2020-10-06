@@ -20,6 +20,8 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
     Optional<Cliente> findByEnderecoId(Long id);
 
+    Optional<Cliente> findByEndereco(Endereco endereco);
+
 
 
 
