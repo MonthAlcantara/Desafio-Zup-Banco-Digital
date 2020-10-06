@@ -80,7 +80,8 @@ public class EnderecoServiceImpl implements EnderecoService {
         enderecoRepository.delete(enderecoEncontrado);
     }
 
-    private Endereco retorneSeExistirEnderecoComId(Long id) {
+    @Override
+    public Endereco retorneSeExistirEnderecoComId(Long id) {
         return enderecoRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Não foi encontrado endereco com esse id: " + id));
     }
