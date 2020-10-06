@@ -5,6 +5,7 @@ import io.github.monthalcantara.nossobancodigital.dto.response.ClienteResponseDT
 import io.github.monthalcantara.nossobancodigital.exception.RecursoNaoEncontradoException;
 import io.github.monthalcantara.nossobancodigital.mappers.ClienteMapper;
 import io.github.monthalcantara.nossobancodigital.model.Cliente;
+import io.github.monthalcantara.nossobancodigital.model.DocumentoCliente;
 import io.github.monthalcantara.nossobancodigital.model.Endereco;
 import io.github.monthalcantara.nossobancodigital.repository.ClienteRepository;
 import io.github.monthalcantara.nossobancodigital.service.interfaces.ClienteService;
@@ -30,10 +31,8 @@ public class ClienteServiceImpl implements ClienteService {
     ClienteRepository clienteRepository;
 
     @Autowired
-    EnderecoService enderecoService;
-
-    @Autowired
     ClienteMapper clienteMapper;
+
 
     @Override
     public Page<ClienteResponseDTO> busqueTodosClientes(Pageable pageable) {
@@ -94,48 +93,6 @@ public class ClienteServiceImpl implements ClienteService {
         clienteRepository.save(cliente);
     }
 
-    @Override
-    public void salveDocumentosCliente(Cliente cliente, String docFrente, String docVerso) {
-        cliente.setFotoDocumentoFrente(docFrente);
-        cliente.setFotoDocumentoVerso(docVerso);
-        clienteRepository.save(cliente);
-    }
-
-    @Override
-    public List<String> salveArquivosDocumentoCliente(String diretorio, Long id, MultipartFile arquivoFrente, MultipartFile arquivoVerso) {
-
-        Cliente cliente = busqueClientePeloId(id);
-
-        retorneSeExistirEnderecoParaClienteComId(id);
-
-        List<String> arquivos = new ArrayList<>();
-        Path diretorioPath = Paths.get(diretorio, "cliente_" + id);
-
-        String nomeArquivoFrente = arquivoFrente.getOriginalFilename();
-        String nomeArquivoVerso = arquivoVerso.getOriginalFilename();
-
-        Path arquivoPathFrente = diretorioPath.resolve(nomeArquivoFrente);
-        Path arquivoPathVerso = diretorioPath.resolve(nomeArquivoVerso);
-        try {
-
-            Files.createDirectories(diretorioPath);
-            arquivoFrente.transferTo(arquivoPathFrente.toFile());
-            arquivoVerso.transferTo(arquivoPathVerso.toFile());
-            salveDocumentosCliente(cliente, nomeArquivoFrente, nomeArquivoVerso);
-
-        } catch (IOException e) {
-            throw new RuntimeException("Problemas na tentativa de salvar arquivo: ", e);
-        }
-        arquivos.add(diretorioPath.toString() + "/" + nomeArquivoFrente);
-        arquivos.add(diretorioPath.toString() + "/" + nomeArquivoVerso);
-        arquivos.forEach(System.out::println);
-        return arquivos;
-    }
-
-    public String busqueLocalizacaoDocumento(String diretorio, Long id, String nomeDoArquivo){
-        Path diretorioPath = Paths.get(diretorio, "cliente_" + id);
-        return  diretorioPath.toString() + "/" + nomeDoArquivo;
-    }
 
     private Cliente converteParaCliente(ClienteDTO cliente) {
         return clienteMapper.converteParaCliente(cliente);
@@ -155,11 +112,10 @@ public class ClienteServiceImpl implements ClienteService {
         return clienteOptional.orElseThrow(() -> new RecursoNaoEncontradoException("Não existe cliente cadastrado com o id: " + id));
     }
 
-    //Atualizar
-    private Endereco retorneSeExistirEnderecoParaClienteComId(Long id) {
+    public Cliente retorneSeExistirEnderecoParaClienteComId(Long id) {
         Cliente cliente = retorneSeExistirClienteComId(id);
-        Optional<Endereco> enderecoOptional = clienteRepository.findEnderecoIdById(id);
-        return enderecoOptional.orElseThrow(() -> new RecursoNaoEncontradoException("O cliente de id " + id + "Não possui endereço cadastrado"));
+        Optional<Cliente> enderecoOptional = clienteRepository.findByEnderecoId(id);
+        return enderecoOptional.orElseThrow(() -> new RecursoNaoEncontradoException("O cliente de id: " + id + " não possui endereço cadastrado"));
     }
 
 }

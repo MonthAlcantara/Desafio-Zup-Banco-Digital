@@ -45,9 +45,10 @@ public class Cliente {
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
 
-    private String fotoDocumentoFrente;
+    @OneToOne
+    @JoinColumn(name = "documento_id")
+    private DocumentoCliente documentoCliente;
 
-    private String fotoDocumentoVerso;
 
 
 }

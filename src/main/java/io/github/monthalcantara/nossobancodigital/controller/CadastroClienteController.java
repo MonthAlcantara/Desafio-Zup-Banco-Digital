@@ -3,8 +3,10 @@ package io.github.monthalcantara.nossobancodigital.controller;
 import io.github.monthalcantara.nossobancodigital.dto.request.ClienteDTO;
 import io.github.monthalcantara.nossobancodigital.dto.request.EnderecoDTO;
 import io.github.monthalcantara.nossobancodigital.mappers.ClienteMapper;
+import io.github.monthalcantara.nossobancodigital.mappers.EnderecoMapper;
 import io.github.monthalcantara.nossobancodigital.model.Cliente;
 import io.github.monthalcantara.nossobancodigital.model.Endereco;
+import io.github.monthalcantara.nossobancodigital.service.implementacoes.DocumentoServiceImpl;
 import io.github.monthalcantara.nossobancodigital.service.interfaces.ClienteService;
 import io.github.monthalcantara.nossobancodigital.service.interfaces.EnderecoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,19 +30,25 @@ public class CadastroClienteController {
     String diretorioArquivos;
 
     @Autowired
-    private ClienteService clienteService;
+    ClienteService clienteService;
 
     @Autowired
-    private EnderecoService enderecoService;
+    EnderecoService enderecoService;
+
+    @Autowired
+    EnderecoMapper enderecoMapper;
 
     @Autowired
     ClienteMapper clienteMapper;
+
+    @Autowired
+    DocumentoServiceImpl documentoService;
 
     @PostMapping("/cliente")
     public ResponseEntity salveCliente(@RequestBody @Valid ClienteDTO client) {
         Cliente clienteSalvo = clienteService.salveNovoCliente(client);
         URI location = geradorLocation(clienteSalvo.getId(), "/{id}/endereco");
-        return ResponseEntity.status(CREATED).header(HttpHeaders.LOCATION, String.valueOf(location)).build();
+        return ResponseEntity.status(CREATED).header(HttpHeaders.LOCATION, String.valueOf(location)).body(clienteMapper.converteParaClienteResponseDTO(clienteSalvo));
     }
 
     @PostMapping("cliente/{id}/endereco")
@@ -48,17 +56,24 @@ public class CadastroClienteController {
         Endereco enderecoSalvo = enderecoService.salveNovoEndereco(id, endereco);
 
         URI location = geradorLocation(id, "/arquivo");
-        return ResponseEntity.status(CREATED).header(HttpHeaders.LOCATION, String.valueOf(location)).build();
+        return ResponseEntity.status(CREATED).header(HttpHeaders.LOCATION, String.valueOf(location)).body(enderecoMapper.converteParaEnderecoResponseDTO(enderecoSalvo));
     }
 
     @PostMapping("cliente/{id}/endereco/arquivo")
     public ResponseEntity salveDocumento(@RequestParam("frente") MultipartFile fotoDocumentoFrente,
                                          @RequestParam("verso") MultipartFile fotoDocumentoVerso,
                                          @PathVariable("id") Long id) {
-        clienteService.salveArquivosDocumentoCliente(diretorioArquivos, id, fotoDocumentoFrente, fotoDocumentoVerso);
+        documentoService.salveArquivosDocumentoCliente(diretorioArquivos, id, fotoDocumentoFrente, fotoDocumentoVerso);
         URI location = geradorLocation(id, "/aceite");
-        return ResponseEntity.status(CREATED).header(HttpHeaders.LOCATION, String.valueOf(location)).build();
+        return ResponseEntity.status(CREATED).header(HttpHeaders.LOCATION, String.valueOf(location)).body(clienteMapper.converteParaClienteResponseDTO(clienteService.busqueClientePeloId(id)));
 
+    }
+
+    //Desenvolver
+    @PostMapping("cliente/{id}/endereco/arquivo/aceite")
+    public ResponseEntity aceiteContrato(@RequestBody Boolean aceite) {
+
+        return ResponseEntity.status(CREATED).header(HttpHeaders.LOCATION, String.valueOf(null)).body(clienteService.busqueClientePeloId(null));
     }
 
 

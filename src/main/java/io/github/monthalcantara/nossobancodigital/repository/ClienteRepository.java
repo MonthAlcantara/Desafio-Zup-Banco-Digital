@@ -18,7 +18,8 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
     Optional<Cliente> findByEmail(String email);
 
-    Optional<Endereco> findEnderecoIdById(Long id);
+    Optional<Cliente> findByEnderecoId(Long id);
+
 
 
 

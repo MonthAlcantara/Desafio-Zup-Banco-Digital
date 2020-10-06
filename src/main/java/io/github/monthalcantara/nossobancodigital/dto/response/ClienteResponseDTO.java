@@ -1,6 +1,7 @@
 package io.github.monthalcantara.nossobancodigital.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.github.monthalcantara.nossobancodigital.model.DocumentoCliente;
 import io.github.monthalcantara.nossobancodigital.model.Endereco;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,8 +31,5 @@ public class ClienteResponseDTO implements Serializable {
     private Endereco endereco;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String fotoDocumentoFrente;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String fotoDocumentoVerso;
+    private DocumentoCliente documentoCliente;
 }

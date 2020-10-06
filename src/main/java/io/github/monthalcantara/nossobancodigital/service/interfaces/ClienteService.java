@@ -8,8 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 public interface ClienteService {
     Page<ClienteResponseDTO> busqueTodosClientes(Pageable pageable);
 
@@ -25,12 +23,11 @@ public interface ClienteService {
 
     Cliente salveNovoCliente(ClienteDTO cliente);
 
+    Cliente retorneSeExistirEnderecoParaClienteComId(Long id);
+
     void deleteClientePeloId(Long id);
 
     void salveEnderecoCliente(Cliente cliente, Endereco endereco);
 
-    void salveDocumentosCliente(Cliente cliente, String docFrente, String docVerso);
-
-    List<String> salveArquivosDocumentoCliente(String diretorio, Long id, MultipartFile arquivoFrente, MultipartFile arquivoVerso);
 
 }
