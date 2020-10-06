@@ -86,8 +86,6 @@ public class EnderecoServiceImpl implements EnderecoService {
     }
 
     private Endereco converteParaEndereco(EnderecoDTO enderecoDTO) {
-        System.out.println(enderecoDTO.toString());
-        System.out.println(enderecoMapper.converteParaEndereco(enderecoDTO).toString());
         return enderecoMapper.converteParaEndereco(enderecoDTO);
     }
 
