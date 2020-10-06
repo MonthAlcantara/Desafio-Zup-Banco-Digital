@@ -19,10 +19,10 @@ import java.nio.file.Paths;
 public class DocumentoServiceImpl implements DocumentoService {
 
     @Autowired
-    ClienteRepository clienteRepository;
+    ClienteService clienteService;
 
     @Autowired
-    ClienteService clienteService;
+    ClienteRepository clienteRepository;
 
     @Autowired
     DocumentoRepository documentoRepository;
@@ -30,47 +30,52 @@ public class DocumentoServiceImpl implements DocumentoService {
     @Override
     public void salveArquivosDocumentoCliente(String diretorio, Long id, MultipartFile arquivoFrente, MultipartFile arquivoVerso) {
 
-        Cliente cliente = clienteService.busqueClientePeloId(id);
-
-        clienteService.retorneSeExistirEnderecoParaClienteComId(id);
+        Cliente cliente = clienteService.retorneSeExistirEnderecoParaClienteComId(id);
 
         Path diretorioPath = Paths.get(diretorio, "cliente_" + id);
 
-        String nomeArquivoFrente = diretorioPath.toString() + "\\" + arquivoFrente.getOriginalFilename();
-        String nomeArquivoVerso = diretorioPath.toString() + "\\" + arquivoVerso.getOriginalFilename();
+        gereDiretorioDestinoDocumento(diretorioPath, arquivoFrente);
+        String caminhoArquivoFrente = busqueLocalizacaoDocumento(diretorioPath, arquivoFrente.getOriginalFilename());
 
-        System.out.println("diretorioPath.toString()" + diretorioPath.toString());
-        System.out.println("arquivoFrente.getOriginalFilename()" + arquivoFrente.getOriginalFilename());
+        gereDiretorioDestinoDocumento(diretorioPath, arquivoVerso);
+        String caminhoArquivoVerso = busqueLocalizacaoDocumento(diretorioPath, arquivoVerso.getOriginalFilename());
 
-        Path arquivoPathFrente = diretorioPath.resolve(nomeArquivoFrente);
-        Path arquivoPathVerso = diretorioPath.resolve(nomeArquivoVerso);
-        System.out.println("arquivoPathFrente" + arquivoPathFrente);
-        try {
-
-            Files.createDirectories(diretorioPath);
-            arquivoFrente.transferTo(arquivoPathFrente.toFile());
-            arquivoVerso.transferTo(arquivoPathVerso.toFile());
-            salveDocumentosCliente(cliente, nomeArquivoFrente, nomeArquivoVerso);
-
-        } catch (IOException e) {
-            throw new RuntimeException("Problemas na tentativa de salvar arquivo: ", e);
-        }
+        salveDocumentosCliente(cliente, caminhoArquivoFrente, caminhoArquivoVerso);
     }
 
     @Override
     public void salveDocumentosCliente(Cliente cliente, String docFrente, String docVerso) {
-        DocumentoCliente doc = new DocumentoCliente();
-        doc.setDocumentoFrente(docFrente);
-        doc.setDocumentoVerso(docVerso);
-
+        DocumentoCliente doc = gereNovoDocumento(docFrente, docVerso);
         cliente.setDocumentoCliente(documentoRepository.save(doc));
-
         clienteRepository.save(cliente);
     }
 
-    @Override
-    public String busqueLocalizacaoDocumento(String diretorio, Long id, String nomeDoArquivo) {
-        Path diretorioPath = Paths.get(diretorio, "cliente_" + id);
+
+    public String busqueLocalizacaoDocumento(Path diretorioPath, String nomeDoArquivo) {
         return diretorioPath.toString() + "\\" + nomeDoArquivo;
+    }
+
+    private Path gereDiretorioDestinoDocumento(Path diretorioPath, MultipartFile arquivo) {
+
+        String nomeArquivoFrente = retorneNomeDiretorioDestinoDocumento(diretorioPath.toString(), arquivo);
+        Path arquivoPathFrente = diretorioPath.resolve(nomeArquivoFrente);
+        try {
+            Files.createDirectories(diretorioPath);
+            arquivo.transferTo(arquivoPathFrente.toFile());
+        } catch (IOException e) {
+            throw new RuntimeException("Problemas na tentativa de salvar arquivo: ", e);
+        }
+        return diretorioPath;
+    }
+
+    private String retorneNomeDiretorioDestinoDocumento(String diretorioPath, MultipartFile arquivo) {
+        return diretorioPath + "\\" + arquivo.getOriginalFilename();
+    }
+
+    private DocumentoCliente gereNovoDocumento(String docFrente, String docVerso) {
+        DocumentoCliente doc = new DocumentoCliente();
+        doc.setDocumentoFrente(docFrente);
+        doc.setDocumentoVerso(docVerso);
+        return doc;
     }
 }
