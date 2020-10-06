@@ -2,6 +2,8 @@ package io.github.monthalcantara.nossobancodigital.controller;
 
 import io.github.monthalcantara.nossobancodigital.dto.request.ClienteDTO;
 import io.github.monthalcantara.nossobancodigital.dto.request.EnderecoDTO;
+import io.github.monthalcantara.nossobancodigital.dto.response.ClienteResponseDTO;
+import io.github.monthalcantara.nossobancodigital.dto.response.EnderecoResponseDTO;
 import io.github.monthalcantara.nossobancodigital.mappers.ClienteMapper;
 import io.github.monthalcantara.nossobancodigital.mappers.EnderecoMapper;
 import io.github.monthalcantara.nossobancodigital.model.Cliente;
@@ -56,7 +58,8 @@ public class CadastroClienteController {
         Endereco enderecoSalvo = enderecoService.salveNovoEndereco(id, endereco);
 
         URI location = geradorLocation(id, "/arquivo");
-        return ResponseEntity.status(CREATED).header(HttpHeaders.LOCATION, String.valueOf(location)).body(enderecoMapper.converteParaEnderecoResponseDTO(enderecoSalvo));
+        EnderecoResponseDTO enderecoResponseDTO = enderecoMapper.converteParaEnderecoResponseDTO(enderecoSalvo);
+        return ResponseEntity.status(CREATED).header(HttpHeaders.LOCATION, String.valueOf(location)).body(enderecoResponseDTO);
     }
 
     @PostMapping("cliente/{id}/endereco/arquivo")
@@ -65,7 +68,8 @@ public class CadastroClienteController {
                                          @PathVariable("id") Long id) {
         documentoService.salveArquivosDocumentoCliente(diretorioArquivos, id, fotoDocumentoFrente, fotoDocumentoVerso);
         URI location = geradorLocation(id, "/aceite");
-        return ResponseEntity.status(CREATED).header(HttpHeaders.LOCATION, String.valueOf(location)).body(clienteMapper.converteParaClienteResponseDTO(clienteService.busqueClientePeloId(id)));
+        ClienteResponseDTO clienteResponseDTO = clienteMapper.converteParaClienteResponseDTO(clienteService.busqueClientePeloId(id));
+        return ResponseEntity.status(CREATED).header(HttpHeaders.LOCATION, String.valueOf(location)).body(clienteResponseDTO);
 
     }
 
