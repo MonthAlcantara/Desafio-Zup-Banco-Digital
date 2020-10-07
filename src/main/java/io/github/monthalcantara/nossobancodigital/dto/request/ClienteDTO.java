@@ -3,18 +3,19 @@ package io.github.monthalcantara.nossobancodigital.dto.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
+import io.github.monthalcantara.nossobancodigital.model.Conta;
 import io.github.monthalcantara.nossobancodigital.validation.annotations.UnicoCNH;
 import io.github.monthalcantara.nossobancodigital.validation.annotations.UnicoCPF;
 import io.github.monthalcantara.nossobancodigital.validation.annotations.UnicoEmail;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -40,9 +41,10 @@ public class ClienteDTO implements Serializable {
     @Size(max = 11, min = 11, message = "Digite um CNH válido")
     private String cnh;
 
-   //@Past(message = "A data informada deve ser menor que a data atual")
     @JsonSerialize(using = DateSerializer.class)
     @JsonFormat(pattern = "dd/MM/yyyy")
     private String dataDeNascimento;
+
+    private Conta conta;
 
 }

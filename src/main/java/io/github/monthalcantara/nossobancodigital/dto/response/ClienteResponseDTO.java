@@ -2,12 +2,12 @@ package io.github.monthalcantara.nossobancodigital.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.github.monthalcantara.nossobancodigital.model.Conta;
 import io.github.monthalcantara.nossobancodigital.model.DocumentoCliente;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -32,4 +32,7 @@ public class ClienteResponseDTO implements Serializable {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private DocumentoCliente documentoCliente;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Conta conta;
 }
