@@ -51,6 +51,10 @@ public class Cliente {
     @JoinColumn(name = "documento_id")
     private DocumentoCliente documentoCliente;
 
+    @OneToOne
+    @JoinColumn(name = "conta_id")
+    private Conta conta;
+
 
     public String getDataDeNascimento() {
         return dataDeNascimento.toString();
@@ -61,7 +65,7 @@ public class Cliente {
         LocalDate data = LocalDate.parse(dataDeNascimento, formatter);
         LocalDate agora = LocalDate.now();
         if(Period.between(data, agora).isNegative() || Period.between(data, agora).equals(agora) ){
-            throw new ViolacaoRegraNegocioException("Escolha uma data no passado");
+            throw new ViolacaoRegraNegocioException("A data de nascimento informada: " + data.format(formatter) + " é maior que a data atual, " + agora.format(formatter));
         }else if (Period.between(data, agora).toTotalMonths() >= 216) {
             this.dataDeNascimento = data;
         } else {
