@@ -57,6 +57,12 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    public Cliente busqueClientePeloEmail(String email) {
+        Optional<Cliente> clienteOptional = clienteRepository.findByEmail(email);
+        return clienteOptional.orElseThrow(() -> new RecursoNaoEncontradoException("Não existe cliente cadastrado com o E-mail: " + email));
+    }
+
+    @Override
     public Cliente atualizeClientePeloId(Long id, ClienteDTO cliente) {
         Cliente clienteEncontrado = busqueClientePeloId(id);
         clienteEncontrado.setCnh(cliente.getCnh());
