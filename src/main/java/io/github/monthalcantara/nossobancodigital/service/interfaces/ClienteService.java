@@ -18,6 +18,8 @@ public interface ClienteService {
 
     Cliente busqueClientePelaCNH(String cnh);
 
+    Cliente busqueClientePeloEmail(String email);
+
     Page<ClienteResponseDTO> busqueClientePeloNome(String name, Pageable pageable);
 
     Cliente salveNovoCliente(ClienteDTO cliente);
