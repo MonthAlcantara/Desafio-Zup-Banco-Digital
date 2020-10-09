@@ -29,6 +29,4 @@ public interface ClienteService {
     void deleteClientePeloId(Long id);
 
     void salveEnderecoCliente(Cliente cliente, Endereco endereco);
-
-
 }

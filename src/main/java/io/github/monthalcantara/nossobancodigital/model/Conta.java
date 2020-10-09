@@ -18,7 +18,7 @@ public class Conta {
     @Column(length = 8)
     private String conta;
 
-    private String CodigoBanco="191";
+    private String CodigoBanco = "191";
 
     @OneToOne
 

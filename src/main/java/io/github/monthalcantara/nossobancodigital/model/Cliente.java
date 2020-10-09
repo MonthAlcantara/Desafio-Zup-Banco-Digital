@@ -1,7 +1,8 @@
 package io.github.monthalcantara.nossobancodigital.model;
 
 import io.github.monthalcantara.nossobancodigital.exception.ViolacaoRegraNegocioException;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.*;
@@ -64,9 +65,9 @@ public class Cliente {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate data = LocalDate.parse(dataDeNascimento, formatter);
         LocalDate agora = LocalDate.now();
-        if(Period.between(data, agora).isNegative() || Period.between(data, agora).equals(agora) ){
+        if (Period.between(data, agora).isNegative() || Period.between(data, agora).equals(agora)) {
             throw new ViolacaoRegraNegocioException("A data de nascimento informada: " + data.format(formatter) + " é maior que a data atual, " + agora.format(formatter));
-        }else if (Period.between(data, agora).toTotalMonths() >= 216) {
+        } else if (Period.between(data, agora).toTotalMonths() >= 216) {
             this.dataDeNascimento = data;
         } else {
             System.out.println(Period.between(data, agora).toTotalMonths());
