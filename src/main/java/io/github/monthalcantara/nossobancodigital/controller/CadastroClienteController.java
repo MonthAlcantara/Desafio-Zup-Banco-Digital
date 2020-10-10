@@ -10,6 +10,7 @@ import io.github.monthalcantara.nossobancodigital.model.Cliente;
 import io.github.monthalcantara.nossobancodigital.model.Endereco;
 import io.github.monthalcantara.nossobancodigital.service.implementacoes.DocumentoServiceImpl;
 import io.github.monthalcantara.nossobancodigital.service.interfaces.ClienteService;
+import io.github.monthalcantara.nossobancodigital.service.interfaces.DocumentoService;
 import io.github.monthalcantara.nossobancodigital.service.interfaces.EnderecoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,7 +45,7 @@ public class CadastroClienteController {
     EnderecoService enderecoService;
 
     @Autowired
-    DocumentoServiceImpl documentoService;
+    DocumentoService documentoService;
 
     @Autowired
     EnderecoMapper enderecoMapper;
