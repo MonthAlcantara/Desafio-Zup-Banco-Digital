@@ -22,27 +22,28 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class ClienteDTO implements Serializable {
 
-    @NotEmpty(message = " O nome do Cliente é obrigatório")
+    @NotEmpty(message = " {campo.nome.obrigatorio}")
     private String nome;
 
-    @NotEmpty(message = " O Sobrenome do Cliente é obrigatório")
+    @NotEmpty(message = "{campo.sobrenome.obrigatorio}")
     private String sobrenome;
 
-    @CPF(message = " Por favor digite um CPF válido")
-    @UnicoCPF(message = "Já existe um cadastro de cliente com esse CPF")
+    @CPF(message = "{campo.cpf.invalido}")
+    @UnicoCPF(message = "{campo.cpf.repetido}")
     private String cpf;
 
-    @Email(message = " Por favor digite um Email válido")
-    @UnicoEmail(message = "Já existe um cadastro de cliente com esse Email")
+    @Email(message = "{campo.email.invalido}")
+    @UnicoEmail(message = "{campo.email.repetido}")
     private String email;
 
-    @NotEmpty(message = " A CNH do Cliente é obrigatória")
-    @UnicoCNH(message = "Já existe um cadastro de cliente com esse CNH")
-    @Size(max = 11, min = 11, message = "Digite um CNH válido")
+    @NotEmpty(message = "{campo.cnh.obrigatorio}")
+    @UnicoCNH(message = "{campo.cnh.repetido}")
+    @Size(max = 11, min = 11, message = "{campo.cnh.ìnvalido}")
     private String cnh;
 
     @JsonSerialize(using = DateSerializer.class)
     @JsonFormat(pattern = "dd/MM/yyyy")
+    @NotEmpty(message = "{campo.data-nascimento.obrigatorio}")
     private String dataDeNascimento;
 
     private Conta conta;
