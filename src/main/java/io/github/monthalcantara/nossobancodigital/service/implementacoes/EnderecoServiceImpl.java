@@ -74,7 +74,7 @@ public class EnderecoServiceImpl implements EnderecoService {
         return enderecoRepository.save(enderecoEncontrado);
     }
 
-    @Override
+
     public void deleteEnderecoPeloId(Long id) {
         Endereco enderecoEncontrado = retorneSeExistirEnderecoComId(id);
         enderecoRepository.delete(enderecoEncontrado);
