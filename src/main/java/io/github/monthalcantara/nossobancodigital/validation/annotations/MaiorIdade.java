@@ -1,7 +1,6 @@
 package io.github.monthalcantara.nossobancodigital.validation.annotations;
 
 import io.github.monthalcantara.nossobancodigital.validation.validators.MaiorIdadeValidator;
-import io.github.monthalcantara.nossobancodigital.validation.validators.UnicoCNHValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -15,7 +14,7 @@ public @interface MaiorIdade {
 
     String message() default "{io.github.monthalcantara.nossobancodigital.validation.annotations.MaiorIdade}";
 
-    Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 }

@@ -14,7 +14,7 @@ public @interface UnicoCNH {
 
     String message() default "{io.github.monthalcantara.nossobancodigital.validation.annotations.UnicoCNH}";
 
-    Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 }
