@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -24,8 +25,12 @@ public class ClienteResponseDTO implements Serializable {
     private String email;
 
     private String cnh;
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private String dataDeNascimento;
+//
+//    @JsonFormat(pattern = "dd/MM/yyyy")
+//    private String dataDeNascimento;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private LocalDate dataDeNascimento;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private EnderecoResponseDTO endereco;

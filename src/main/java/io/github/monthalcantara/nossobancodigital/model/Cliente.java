@@ -1,6 +1,9 @@
 package io.github.monthalcantara.nossobancodigital.model;
 
 import io.github.monthalcantara.nossobancodigital.exception.ViolacaoRegraNegocioException;
+import io.github.monthalcantara.nossobancodigital.validation.annotations.UnicoCNH;
+import io.github.monthalcantara.nossobancodigital.validation.annotations.UnicoCPF;
+import io.github.monthalcantara.nossobancodigital.validation.annotations.UnicoEmail;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.br.CPF;
@@ -8,6 +11,7 @@ import org.hibernate.validator.constraints.br.CPF;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
 import java.time.Period;
@@ -22,15 +26,15 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty(message = " O nome do Cliente é obrigatório")
+    @NotEmpty
     @Column(length = 20, nullable = false)
     private String nome;
 
-    @NotEmpty(message = " O Sobrenome do Cliente é obrigatório")
+    @NotEmpty
     @Column(length = 100)
     private String sobrenome;
 
-    @CPF(message = " CPF inválido")
+    @CPF
     @Column(nullable = false)
     private String cpf;
 
@@ -41,7 +45,8 @@ public class Cliente {
     @Column(nullable = false)
     private String cnh;
 
-    @Past(message = "A data informada deve ser menor que a data atual")
+    @NotNull
+    @Past
     private LocalDate dataDeNascimento;
 
     @OneToOne
@@ -55,23 +60,4 @@ public class Cliente {
     @OneToOne
     @JoinColumn(name = "conta_id")
     private Conta conta;
-
-
-    public String getDataDeNascimento() {
-        return dataDeNascimento.toString();
-    }
-
-    public void setDataDeNascimento(String dataDeNascimento) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate data = LocalDate.parse(dataDeNascimento, formatter);
-        LocalDate agora = LocalDate.now();
-        if (Period.between(data, agora).isNegative() || Period.between(data, agora).equals(agora)) {
-            throw new ViolacaoRegraNegocioException("A data de nascimento informada: " + data.format(formatter) + " é maior que a data atual, " + agora.format(formatter));
-        } else if (Period.between(data, agora).toTotalMonths() >= 216) {
-            this.dataDeNascimento = data;
-        } else {
-            System.out.println(Period.between(data, agora).toTotalMonths());
-            throw new ViolacaoRegraNegocioException("Você precisa ser maior de idade para abrir conta no nosso banco");
-        }
-    }
 }
