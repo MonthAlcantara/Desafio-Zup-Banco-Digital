@@ -1,8 +1,6 @@
 package io.github.monthalcantara.nossobancodigital.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import io.github.monthalcantara.nossobancodigital.model.Conta;
 import io.github.monthalcantara.nossobancodigital.validation.annotations.MaiorIdade;
 import io.github.monthalcantara.nossobancodigital.validation.annotations.UnicoCNH;

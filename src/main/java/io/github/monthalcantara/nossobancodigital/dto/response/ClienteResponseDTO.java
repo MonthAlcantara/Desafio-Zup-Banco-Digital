@@ -25,9 +25,6 @@ public class ClienteResponseDTO implements Serializable {
     private String email;
 
     private String cnh;
-//
-//    @JsonFormat(pattern = "dd/MM/yyyy")
-//    private String dataDeNascimento;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate dataDeNascimento;

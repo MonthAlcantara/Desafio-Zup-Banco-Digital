@@ -1,9 +1,5 @@
 package io.github.monthalcantara.nossobancodigital.model;
 
-import io.github.monthalcantara.nossobancodigital.exception.ViolacaoRegraNegocioException;
-import io.github.monthalcantara.nossobancodigital.validation.annotations.UnicoCNH;
-import io.github.monthalcantara.nossobancodigital.validation.annotations.UnicoCPF;
-import io.github.monthalcantara.nossobancodigital.validation.annotations.UnicoEmail;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.br.CPF;
@@ -14,8 +10,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
