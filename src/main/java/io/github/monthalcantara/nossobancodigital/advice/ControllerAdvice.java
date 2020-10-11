@@ -40,6 +40,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(MultipartException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrosApi tamanhoMaximoArquivoException(MultipartException e) {
         return new ErrosApi(e.getMessage());
 
@@ -50,5 +51,4 @@ public class ControllerAdvice {
     public ErrosApi violacaoRegraNegocioException(ViolacaoRegraNegocioException e) {
         return new ErrosApi(e.getMessage());
     }
-
 }
