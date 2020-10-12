@@ -1,4 +1,4 @@
-package io.github.monthalcantara.nossobancodigital.service.implementacoes;
+package io.github.monthalcantara.nossobancodigital.service.implementations;
 
 import io.github.monthalcantara.nossobancodigital.dto.request.EnderecoDTO;
 import io.github.monthalcantara.nossobancodigital.dto.response.EnderecoResponseDTO;
