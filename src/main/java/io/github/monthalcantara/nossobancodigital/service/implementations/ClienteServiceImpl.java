@@ -53,7 +53,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public Cliente busqueClientePelaCNH(String cnh) {
         Optional<Cliente> clienteOptional = clienteRepository.findByCnh(cnh);
-        return clienteOptional.orElseThrow(() -> new RecursoNaoEncontradoException("Não existe cliente cadastrado com o CNH: " + cnh));
+        return clienteOptional.orElseThrow(() -> new RecursoNaoEncontradoException("Não existe cliente cadastrado com a CNH: " + cnh));
     }
 
     @Override

@@ -21,6 +21,5 @@ public class Conta {
     private String CodigoBanco = "191";
 
     @OneToOne
-
     private Cliente cliente;
 }
