@@ -7,6 +7,7 @@ import io.github.monthalcantara.nossobancodigital.validation.annotations.UnicoCN
 import io.github.monthalcantara.nossobancodigital.validation.annotations.UnicoCPF;
 import io.github.monthalcantara.nossobancodigital.validation.annotations.UnicoEmail;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.br.CPF;
@@ -16,6 +17,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClienteDTO implements Serializable {
