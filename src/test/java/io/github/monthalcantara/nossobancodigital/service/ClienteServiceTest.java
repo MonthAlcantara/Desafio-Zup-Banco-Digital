@@ -25,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ClienteServiceTest {
-
     Cliente cliente, clienteSalvo;
 
     @Autowired
@@ -148,3 +147,4 @@ public class ClienteServiceTest {
                 .build();
     }
 }
+
