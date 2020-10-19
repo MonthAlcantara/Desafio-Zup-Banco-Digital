@@ -6,6 +6,7 @@ import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class EnderecoDTO implements Serializable {
@@ -29,3 +30,4 @@ public class EnderecoDTO implements Serializable {
     private String estado;
 
 }
+

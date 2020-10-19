@@ -1,8 +1,9 @@
 package io.github.monthalcantara.nossobancodigital.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.*;
@@ -12,9 +13,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
 
-@Getter
-@Setter
+@Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Cliente {
 

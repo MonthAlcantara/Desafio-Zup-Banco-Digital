@@ -1,14 +1,18 @@
 package io.github.monthalcantara.nossobancodigital.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-@Getter
-@Setter
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Endereco {
 
