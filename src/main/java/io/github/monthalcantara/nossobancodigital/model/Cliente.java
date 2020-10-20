@@ -33,14 +33,14 @@ public class Cliente {
     private String sobrenome;
 
     @CPF
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String cpf;
 
     @Email
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String cnh;
 
     @NotNull
