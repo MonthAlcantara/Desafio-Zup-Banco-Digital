@@ -20,10 +20,10 @@ public class Conta {
     private String agencia;
 
     @Column(length = 8)
-    private String conta;
+    private String numeroConta;
 
     private String CodigoBanco = "191";
 
-    @OneToOne
+    @OneToOne(mappedBy = "conta")
     private Cliente cliente;
 }

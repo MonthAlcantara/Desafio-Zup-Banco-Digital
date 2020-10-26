@@ -10,6 +10,7 @@ import javax.validation.ConstraintValidatorContext;
 public class UnicoEmailValidator implements ConstraintValidator<UnicoEmail, String> {
     @Autowired
     private ClienteRepository clienteRepository;
+
     @Override
     public boolean isValid(String email, ConstraintValidatorContext constraintValidatorContext) {
         return !clienteRepository.findByEmail(email).isPresent();
