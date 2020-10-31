@@ -17,4 +17,7 @@ public @interface MaiorIdade {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
+   int maiorQue() default 18;
+
 }
