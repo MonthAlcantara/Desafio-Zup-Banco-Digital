@@ -1,6 +1,7 @@
 package io.github.monthalcantara.nossobancodigital.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.github.monthalcantara.nossobancodigital.model.Cliente;
 import io.github.monthalcantara.nossobancodigital.model.Conta;
 import io.github.monthalcantara.nossobancodigital.validation.annotations.MaiorIdade;
 import io.github.monthalcantara.nossobancodigital.validation.annotations.UnicoCNH;
@@ -49,4 +50,18 @@ public class ClienteDTO implements Serializable {
 
     private Conta conta;
 
+    public Cliente converteParaCliente(ClienteDTO clienteDTO) {
+        Cliente cliente = new Cliente();
+        cliente.setNome(clienteDTO.getNome());
+        cliente.setSobrenome(clienteDTO.getSobrenome());
+        cliente.setCpf(clienteDTO.getCpf());
+        cliente.setEmail(clienteDTO.getEmail());
+        cliente.setCnh(clienteDTO.getCnh());
+        cliente.setDataDeNascimento(clienteDTO.getDataDeNascimento());
+        cliente.setConta(clienteDTO.getConta());
+        return cliente;
+    }
 }
+
+
+
