@@ -14,17 +14,18 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
+
     @Autowired
     ClienteRepository clienteRepository;
 
     @Autowired
     ClienteMapper clienteMapper;
-
 
     @Override
     public Page<ClienteResponseDTO> busqueTodosClientes(Pageable pageable) {
@@ -62,6 +63,7 @@ public class ClienteServiceImpl implements ClienteService {
         return clienteOptional.orElseThrow(() -> new RecursoNaoEncontradoException("Não existe cliente cadastrado com o E-mail: " + email));
     }
 
+    @Transactional
     @Override
     public Cliente atualizeClientePeloId(Long id, ClienteDTO cliente) {
         Cliente clienteEncontrado = busqueClientePeloId(id);
@@ -74,18 +76,21 @@ public class ClienteServiceImpl implements ClienteService {
         return clienteRepository.save(clienteEncontrado);
     }
 
+    @Transactional
     @Override
     public Cliente salveNovoCliente(ClienteDTO clienteDTO) {
         Cliente cliente = converteParaCliente(clienteDTO);
         return clienteRepository.save(cliente);
     }
 
+    @Transactional
     @Override
     public void deleteClientePeloId(Long id) {
         Cliente clienteEncontrado = busqueClientePeloId(id);
         clienteRepository.delete(clienteEncontrado);
     }
 
+    @Transactional
     @Override
     public void salveEnderecoCliente(Cliente cliente, Endereco endereco) {
         cliente.setEndereco(endereco);

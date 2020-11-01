@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -35,6 +36,7 @@ public class EnderecoServiceImpl implements EnderecoService {
         return converteParaPageEnderecoResponseDTO(paginaEnderecos, pageable);
     }
 
+    @Transactional
     @Override
     public Endereco salveNovoEndereco(Long id, EnderecoDTO enderecoDTO) {
 
@@ -60,6 +62,7 @@ public class EnderecoServiceImpl implements EnderecoService {
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Não foi encontrado endereco com esse cep: " + cep));
     }
 
+    @Transactional
     @Override
     public Endereco atualizeEnderecoSeExistir(Long id, EnderecoDTO enderecoDTO) {
         Endereco enderecoEncontrado = retorneSeExistirEnderecoComId(id);
