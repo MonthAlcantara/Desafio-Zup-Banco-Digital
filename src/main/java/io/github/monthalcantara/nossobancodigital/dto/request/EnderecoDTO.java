@@ -1,6 +1,10 @@
 package io.github.monthalcantara.nossobancodigital.dto.request;
 
-import lombok.*;
+import io.github.monthalcantara.nossobancodigital.model.Endereco;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
@@ -29,5 +33,15 @@ public class EnderecoDTO implements Serializable {
     @NotEmpty(message = "{campo.estado.obrigatorio}")
     private String estado;
 
+    public Endereco converteParaEndereco(EnderecoDTO endereco){
+        return Endereco.builder()
+                .bairro(endereco.getBairro())
+                .rua(endereco.getRua())
+                .cep(endereco.getCep())
+                .complemento(endereco.getComplemento())
+                .cidade(endereco.getCidade())
+                .estado(endereco.getEstado())
+                .build();
+    }
 }
 
