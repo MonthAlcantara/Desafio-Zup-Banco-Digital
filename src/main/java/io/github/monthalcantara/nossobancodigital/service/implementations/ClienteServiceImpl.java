@@ -13,8 +13,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,19 +48,22 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public Cliente busqueClientePeloCPF(String cpf) {
+    public Cliente busqueClientePeloCPF(@NotBlank String cpf) {
+        Assert.hasText(cpf, "Email não pode estar vazio");
         Optional<Cliente> clienteOptional = clienteRepository.findByCpf(cpf);
         return clienteOptional.orElseThrow(() -> new RecursoNaoEncontradoException("Não existe cliente cadastrado com o CPF: " + cpf));
     }
 
     @Override
-    public Cliente busqueClientePelaCNH(String cnh) {
+    public Cliente busqueClientePelaCNH(@NotBlank String cnh) {
+        Assert.hasText(cnh, "Email não pode estar vazio");
         Optional<Cliente> clienteOptional = clienteRepository.findByCnh(cnh);
         return clienteOptional.orElseThrow(() -> new RecursoNaoEncontradoException("Não existe cliente cadastrado com a CNH: " + cnh));
     }
 
     @Override
-    public Cliente busqueClientePeloEmail(String email) {
+    public Cliente busqueClientePeloEmail(@NotBlank String email) {
+        Assert.hasText(email, "Email não pode estar vazio");
         Optional<Cliente> clienteOptional = clienteRepository.findByEmail(email);
         return clienteOptional.orElseThrow(() -> new RecursoNaoEncontradoException("Não existe cliente cadastrado com o E-mail: " + email));
     }
@@ -66,14 +71,11 @@ public class ClienteServiceImpl implements ClienteService {
     @Transactional
     @Override
     public Cliente atualizeClientePeloId(Long id, ClienteDTO cliente) {
-        Cliente clienteEncontrado = busqueClientePeloId(id);
-        clienteEncontrado.setCnh(cliente.getCnh());
-        clienteEncontrado.setCpf(cliente.getCpf());
-        clienteEncontrado.setDataDeNascimento(cliente.getDataDeNascimento());
-        clienteEncontrado.setEmail(cliente.getEmail());
-        clienteEncontrado.setNome(cliente.getNome());
-        clienteEncontrado.setSobrenome(cliente.getSobrenome());
-        return clienteRepository.save(clienteEncontrado);
+        busqueClientePeloId(id);
+        Cliente clienteAtualizado = cliente.converteParaCliente(cliente);
+        clienteAtualizado.setId(id);
+
+        return clienteRepository.save(clienteAtualizado);
     }
 
     @Transactional
