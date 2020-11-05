@@ -71,6 +71,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Transactional
     @Override
     public Cliente atualizeClientePeloId(Long id, ClienteDTO cliente) {
+        Assert.isTrue(cliente.estaCompleto(), "Todos os dados do cliente devem ser informados");
         busqueClientePeloId(id);
         Cliente clienteAtualizado = cliente.converteParaCliente(cliente);
         clienteAtualizado.setId(id);
@@ -81,6 +82,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Transactional
     @Override
     public Cliente salveNovoCliente(ClienteDTO clienteDTO) {
+        Assert.isTrue(clienteDTO.estaCompleto(), "Todos os dados do cliente devem ser informados");
         Cliente cliente = converteParaCliente(clienteDTO);
         return clienteRepository.save(cliente);
     }
