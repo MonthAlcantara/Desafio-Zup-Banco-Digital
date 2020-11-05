@@ -17,6 +17,7 @@ import org.springframework.util.Assert;
 
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +37,8 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public Page<ClienteResponseDTO> busqueClientePeloNome(String nome, Pageable pageable) {
+    public Page<ClienteResponseDTO> busqueClientePeloNome(@NotBlank String nome, Pageable pageable) {
+        Assert.hasText(nome, "O campo nome não pode ser vazio");
         Page<Cliente> paginaClientes = clienteRepository.findAllByNome(nome, pageable);
         return converteParaPageClienteResponseDTO(paginaClientes, pageable);
     }
@@ -49,14 +51,14 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Cliente busqueClientePeloCPF(@NotBlank String cpf) {
-        Assert.hasText(cpf, "Email não pode estar vazio");
+        Assert.hasText(cpf, "CPF não pode estar vazio");
         Optional<Cliente> clienteOptional = clienteRepository.findByCpf(cpf);
         return clienteOptional.orElseThrow(() -> new RecursoNaoEncontradoException("Não existe cliente cadastrado com o CPF: " + cpf));
     }
 
     @Override
     public Cliente busqueClientePelaCNH(@NotBlank String cnh) {
-        Assert.hasText(cnh, "Email não pode estar vazio");
+        Assert.hasText(cnh, "CNH não pode estar vazio");
         Optional<Cliente> clienteOptional = clienteRepository.findByCnh(cnh);
         return clienteOptional.orElseThrow(() -> new RecursoNaoEncontradoException("Não existe cliente cadastrado com a CNH: " + cnh));
     }
@@ -70,8 +72,8 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Transactional
     @Override
-    public Cliente atualizeClientePeloId(Long id, ClienteDTO cliente) {
-        Assert.isTrue(cliente.estaCompleto(), "Todos os dados do cliente devem ser informados");
+    public Cliente atualizeClientePeloId(Long id, @NotNull ClienteDTO cliente) {
+        Assert.isTrue(cliente.verificaTodosOsDadosEstaoCompletos(), "Todos os dados do cliente devem ser informados");
         busqueClientePeloId(id);
         Cliente clienteAtualizado = cliente.converteParaCliente(cliente);
         clienteAtualizado.setId(id);
@@ -82,7 +84,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Transactional
     @Override
     public Cliente salveNovoCliente(ClienteDTO clienteDTO) {
-        Assert.isTrue(clienteDTO.estaCompleto(), "Todos os dados do cliente devem ser informados");
+        Assert.isTrue(clienteDTO.verificaTodosOsDadosEstaoCompletos(), "Todos os dados do cliente devem ser informados");
         Cliente cliente = converteParaCliente(clienteDTO);
         return clienteRepository.save(cliente);
     }
@@ -96,7 +98,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Transactional
     @Override
-    public void salveEnderecoCliente(Cliente cliente, Endereco endereco) {
+    public void salveEnderecoCliente(@NotNull Cliente cliente, @NotNull Endereco endereco) {
         cliente.setEndereco(endereco);
         clienteRepository.save(cliente);
     }
