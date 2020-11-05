@@ -14,8 +14,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Service
@@ -38,17 +41,19 @@ public class EnderecoServiceImpl implements EnderecoService {
 
     @Transactional
     @Override
-    public Endereco salveNovoEndereco(Long id, EnderecoDTO enderecoDTO) {
+    public Endereco salveNovoEndereco(Long id, @NotNull EnderecoDTO enderecoDTO) {
 
+        Assert.isTrue(enderecoDTO.verificaTodosCamposEstaoCompletos(), "Todos os dados do endereço devem estar completos");
         Cliente cliente = clienteService.busqueClientePeloId(id);
 
-        Endereco endereco = converteParaEndereco(enderecoDTO);
+        Endereco endereco = new Endereco(enderecoDTO);
+        Assert.isTrue(endereco.verificaTodosCamposEstaoCompletos(), "Todos os dados do endereço devem estar completos");
         cliente.setEndereco(endereco);
-        System.out.println(endereco);
+        Assert.isTrue(cliente.verificaDadosCompletosPassoDois(), "Todos os dados do cliente e endereço devem estar completos");
         Endereco enderecoSalvo = enderecoRepository.save(endereco);
 
         clienteService.salveEnderecoCliente(cliente, enderecoSalvo);
-        return (converteParaEndereco(enderecoDTO));
+        return new Endereco(enderecoDTO);
     }
 
     @Override
@@ -57,27 +62,24 @@ public class EnderecoServiceImpl implements EnderecoService {
     }
 
     @Override
-    public Endereco busqueEnderecoPeloCep(String cep) {
+    public Endereco busqueEnderecoPeloCep(@NotBlank String cep) {
+        Assert.hasText(cep, "O cep do endereço pprecisa ser informado");
         return enderecoRepository.findByCep(cep)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Não foi encontrado endereco com esse cep: " + cep));
     }
 
     @Transactional
     @Override
-    public Endereco atualizeEnderecoSeExistir(Long id, EnderecoDTO enderecoDTO) {
-        Endereco enderecoEncontrado = retorneSeExistirEnderecoComId(id);
-        Endereco endereco = converteParaEndereco(enderecoDTO);
-        enderecoEncontrado.setBairro(endereco.getBairro());
-        enderecoEncontrado.setCep(endereco.getCep());
-        enderecoEncontrado.setCidade(endereco.getCidade());
-        enderecoEncontrado.setEstado(endereco.getEstado());
-        enderecoEncontrado.setComplemento(endereco.getComplemento());
-        enderecoEncontrado.setRua(endereco.getRua());
-        endereco.setId(enderecoEncontrado.getId());
-        return enderecoRepository.save(enderecoEncontrado);
+    public Endereco atualizeEnderecoSeExistir(Long id, @NotNull EnderecoDTO enderecoDTO) {
+        Assert.isTrue(enderecoDTO.verificaTodosCamposEstaoCompletos(), "Todos os campos do endereço devem ser informados");
+        retorneSeExistirEnderecoComId(id);
+        Endereco endereco = new Endereco(enderecoDTO);
+        endereco.setId(id);
+        return enderecoRepository.save(endereco);
     }
 
-
+    @Transactional
+    @Override
     public void deleteEnderecoPeloId(Long id) {
         Endereco enderecoEncontrado = retorneSeExistirEnderecoComId(id);
         enderecoRepository.delete(enderecoEncontrado);
@@ -87,10 +89,6 @@ public class EnderecoServiceImpl implements EnderecoService {
     public Endereco retorneSeExistirEnderecoComId(Long id) {
         return enderecoRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Não foi encontrado endereco com esse id: " + id));
-    }
-
-    private Endereco converteParaEndereco(EnderecoDTO enderecoDTO) {
-        return enderecoMapper.converteParaEndereco(enderecoDTO);
     }
 
     private List<EnderecoResponseDTO> converteParaListaEnderecoResponseDTO(List<Endereco> listaEndereco) {
