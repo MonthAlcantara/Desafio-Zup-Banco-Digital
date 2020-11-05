@@ -23,21 +23,23 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ClienteDTO implements Serializable {
 
-    @NotEmpty(message = " {campo.nome.obrigatorio}")
+    @NotBlank(message = " {campo.nome.obrigatorio}")
     private String nome;
 
-    @NotEmpty(message = "{campo.sobrenome.obrigatorio}")
+   @NotBlank(message = "{campo.sobrenome.obrigatorio}")
     private String sobrenome;
 
+    @NotBlank(message = "{campo.cpf.obrigatorio}")
     @CPF(message = "{campo.cpf.invalido}")
     @UnicoCPF(message = "{campo.cpf.repetido}")
     private String cpf;
 
+    @NotBlank(message = "{campo.email.obrigatorio}")
     @Email(message = "{campo.email.invalido}")
     @UnicoEmail(message = "{campo.email.repetido}")
     private String email;
 
-    @NotEmpty(message = "{campo.cnh.obrigatorio}")
+    @NotBlank(message = "{campo.cnh.obrigatorio}")
     @UnicoCNH(message = "{campo.cnh.repetido}")
     @Size(max = 11, min = 11, message = "{campo.cnh.ìnvalido}")
     private String cnh;
@@ -48,18 +50,23 @@ public class ClienteDTO implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate dataDeNascimento;
 
-    private Conta conta;
-
     public Cliente converteParaCliente(ClienteDTO clienteDTO) {
-        Cliente cliente = new Cliente();
-        cliente.setNome(clienteDTO.getNome());
-        cliente.setSobrenome(clienteDTO.getSobrenome());
-        cliente.setCpf(clienteDTO.getCpf());
-        cliente.setEmail(clienteDTO.getEmail());
-        cliente.setCnh(clienteDTO.getCnh());
-        cliente.setDataDeNascimento(clienteDTO.getDataDeNascimento());
-        cliente.setConta(clienteDTO.getConta());
-        return cliente;
+        return Cliente.builder()
+                .nome(clienteDTO.getNome())
+                .sobrenome(clienteDTO.getSobrenome())
+                .cpf(clienteDTO.getCpf())
+                .email(clienteDTO.getEmail())
+                .cnh(clienteDTO.getCnh())
+                .dataDeNascimento(clienteDTO.getDataDeNascimento())
+                .build();
+    }
+
+    public boolean verificaTodosOsDadosEstaoCompletos(){
+        return this.nome != null && !(this.sobrenome.isEmpty())
+                && this.sobrenome != null && !(this.sobrenome.isEmpty())
+                && this.email != null && !(this.email.isEmpty())
+                && this.cnh != null&& !(this.cnh.isEmpty())
+                && this.dataDeNascimento != null;
     }
 }
 

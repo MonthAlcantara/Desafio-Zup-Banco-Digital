@@ -7,11 +7,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Data
 @Builder
@@ -24,22 +22,25 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty
+    @NotBlank
     @Column(length = 20, nullable = false)
     private String nome;
 
-    @NotEmpty
+    @NotBlank
     @Column(length = 100)
     private String sobrenome;
 
+    @NotBlank
     @CPF
     @Column(unique = true, nullable = false)
     private String cpf;
 
+    @NotBlank
     @Email
     @Column(unique = true, nullable = false)
     private String email;
 
+    @NotBlank
     @Column(unique = true, nullable = false)
     private String cnh;
 
@@ -58,4 +59,32 @@ public class Cliente {
     @OneToOne
     @JoinColumn(name = "conta_id")
     private Conta conta;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cliente cliente = (Cliente) o;
+        return cpf.equals(cliente.cpf) &&
+                email.equals(cliente.email) &&
+                cnh.equals(cliente.cnh);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cpf, email, cnh);
+    }
+
+    public boolean verificaDadosCompletosPassoUm() {
+        return this.nome != null && !(this.sobrenome.isEmpty())
+                && this.sobrenome != null && !(this.sobrenome.isEmpty())
+                && this.email != null && !(this.email.isEmpty())
+                && this.cnh != null && !(this.cnh.isEmpty())
+                && this.dataDeNascimento != null;
+    }
+
+    public boolean verificaDadosCompletosPassoDois() {
+        return this.verificaDadosCompletosPassoUm()
+                && this.endereco.verificaTodosCamposEstaoCompletos();
+    }
 }
