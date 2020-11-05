@@ -19,4 +19,6 @@ public interface EnderecoService {
 
     Endereco retorneSeExistirEnderecoComId(Long id);
 
+    void deleteEnderecoPeloId(Long id);
+
 }
