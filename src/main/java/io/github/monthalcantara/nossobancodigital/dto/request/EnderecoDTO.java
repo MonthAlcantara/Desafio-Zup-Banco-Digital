@@ -43,5 +43,14 @@ public class EnderecoDTO implements Serializable {
                 .estado(endereco.getEstado())
                 .build();
     }
+
+    public boolean verificaTodosCamposEstaoCompletos() {
+        return this.cep != null && !(this.cep.isEmpty())
+                && this.rua != null && !(this.rua.isEmpty())
+                && this.bairro != null && !(this.bairro.isEmpty())
+                && this.complemento != null && !(this.complemento.isEmpty())
+                && this.cidade != null && !(this.cidade.isEmpty())
+                && this.estado != null && !(this.estado.isEmpty());
+    }
 }
 

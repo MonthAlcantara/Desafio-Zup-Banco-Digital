@@ -1,5 +1,6 @@
 package io.github.monthalcantara.nossobancodigital.model;
 
+import io.github.monthalcantara.nossobancodigital.dto.request.EnderecoDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,6 +33,16 @@ public class Endereco {
     private String cidade;
 
     private String estado;
+
+    public Endereco(EnderecoDTO enderecoDTO) {
+        this.cep = enderecoDTO.getCep();
+        this.rua = enderecoDTO.getRua();
+        this.bairro = enderecoDTO.getBairro();
+        this.complemento = enderecoDTO.getComplemento();
+        this.cidade = enderecoDTO.getCidade();
+        this.estado = enderecoDTO.getEstado();
+
+    }
 
     public boolean verificaTodosCamposEstaoCompletos() {
         return this.cep != null && !(this.cep.isEmpty())
