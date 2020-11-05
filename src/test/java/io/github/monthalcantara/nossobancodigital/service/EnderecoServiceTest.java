@@ -25,8 +25,10 @@ import java.util.Optional;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class EnderecoServiceTest {
+
     Endereco endereco, enderecoSalvo;
 
+    @MockBean
     Page<Endereco> paginaEnderecos;
 
     @Autowired
