@@ -51,4 +51,10 @@ public class ControllerAdvice {
     public ErrosApi violacaoRegraNegocioException(ViolacaoRegraNegocioException e) {
         return new ErrosApi(e.getMessage());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrosApi IllegalArgumentException(IllegalArgumentException e) {
+        return new ErrosApi(e.getMessage());
+    }
 }
