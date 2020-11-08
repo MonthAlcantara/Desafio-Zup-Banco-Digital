@@ -1,5 +1,6 @@
 package io.github.monthalcantara.nossobancodigital.model;
 
+import io.github.monthalcantara.nossobancodigital.exception.RecursoNaoEncontradoException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,7 +8,10 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -86,5 +90,12 @@ public class Cliente {
     public boolean verificaDadosCompletosPassoDois() {
         return this.verificaDadosCompletosPassoUm()
                 && this.endereco.verificaTodosCamposEstaoCompletos();
+    }
+
+    public Long getId() {
+        if (this.id == null) {
+            throw new RecursoNaoEncontradoException("Não existe um id atrelado a esse cliente");
+        }
+        return this.id;
     }
 }

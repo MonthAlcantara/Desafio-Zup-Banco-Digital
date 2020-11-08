@@ -1,6 +1,7 @@
 package io.github.monthalcantara.nossobancodigital.model;
 
 import io.github.monthalcantara.nossobancodigital.dto.request.EnderecoDTO;
+import io.github.monthalcantara.nossobancodigital.exception.RecursoNaoEncontradoException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -67,5 +68,12 @@ public class Endereco {
     @Override
     public int hashCode() {
         return Objects.hash(cep, bairro, cidade, estado);
+    }
+
+    public Long getId() {
+        if (this.id == null) {
+            throw new RecursoNaoEncontradoException("Não existe um id atrelado a esse endereço");
+        }
+        return this.id;
     }
 }

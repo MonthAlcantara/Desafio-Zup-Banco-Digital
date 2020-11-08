@@ -1,5 +1,6 @@
 package io.github.monthalcantara.nossobancodigital.model;
 
+import io.github.monthalcantara.nossobancodigital.exception.RecursoNaoEncontradoException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,4 +27,11 @@ public class Conta {
 
     @OneToOne(mappedBy = "conta")
     private Cliente cliente;
+
+    public Long getId() {
+        if (this.id == null) {
+            throw new RecursoNaoEncontradoException("Não existe um id atrelado a essa conta");
+        }
+        return this.id;
+    }
 }

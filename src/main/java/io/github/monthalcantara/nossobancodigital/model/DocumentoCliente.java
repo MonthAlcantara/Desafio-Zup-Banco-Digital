@@ -1,5 +1,6 @@
 package io.github.monthalcantara.nossobancodigital.model;
 
+import io.github.monthalcantara.nossobancodigital.exception.RecursoNaoEncontradoException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,4 +22,11 @@ public class DocumentoCliente implements Serializable {
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "documentoCliente", fetch = FetchType.LAZY)
     private Cliente cliente;
+
+    public Long getId() {
+        if (this.id == null) {
+            throw new RecursoNaoEncontradoException("Não existe um id atrelado a esse documento");
+        }
+        return this.id;
+    }
 }
