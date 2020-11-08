@@ -57,4 +57,10 @@ public class ControllerAdvice {
     public ErrosApi IllegalArgumentException(IllegalArgumentException e) {
         return new ErrosApi(e.getMessage());
     }
+
+    @ExceptionHandler(NullPointerException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrosApi NullPointerException(NullPointerException e) {
+        return new ErrosApi(e.getMessage());
+    }
 }
