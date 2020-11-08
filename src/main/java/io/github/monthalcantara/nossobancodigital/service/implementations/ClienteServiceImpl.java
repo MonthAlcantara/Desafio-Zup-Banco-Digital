@@ -39,7 +39,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public Page<ClienteResponseDTO> busqueClientePeloNome(@NotBlank String nome, Pageable pageable) {
         Assert.hasText(nome, "O campo nome não pode ser vazio");
-        Page<Cliente> paginaClientes = clienteRepository.findAllByNome(nome, pageable);
+        Page<Cliente> paginaClientes = clienteRepository.findAllByNome(nome, pageable).get();
         return converteParaPageClienteResponseDTO(paginaClientes, pageable);
     }
 
