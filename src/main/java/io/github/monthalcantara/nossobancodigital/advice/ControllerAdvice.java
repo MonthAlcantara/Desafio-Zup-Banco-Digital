@@ -43,7 +43,6 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrosApi tamanhoMaximoArquivoException(MultipartException e) {
         return new ErrosApi(e.getMessage());
-
     }
 
     @ExceptionHandler(ViolacaoRegraNegocioException.class)
@@ -54,13 +53,20 @@ public class ControllerAdvice {
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrosApi IllegalArgumentException(IllegalArgumentException e) {
+    public ErrosApi illegalArgumentException(IllegalArgumentException e) {
         return new ErrosApi(e.getMessage());
     }
 
     @ExceptionHandler(NullPointerException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrosApi NullPointerException(NullPointerException e) {
+    public ErrosApi nullPointerException(NullPointerException e) {
         return new ErrosApi(e.getMessage());
     }
+
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrosApi illegalStateException(IllegalStateException e) {
+        return new ErrosApi(e.getMessage());
+    }
+
 }
