@@ -2,11 +2,8 @@ package io.github.monthalcantara.nossobancodigital.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.monthalcantara.nossobancodigital.model.Cliente;
-import io.github.monthalcantara.nossobancodigital.model.Conta;
 import io.github.monthalcantara.nossobancodigital.validation.annotations.MaiorIdade;
-import io.github.monthalcantara.nossobancodigital.validation.annotations.UnicoCNH;
-import io.github.monthalcantara.nossobancodigital.validation.annotations.UnicoCPF;
-import io.github.monthalcantara.nossobancodigital.validation.annotations.UnicoEmail;
+import io.github.monthalcantara.nossobancodigital.validation.annotations.ValorUnico;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,21 +23,21 @@ public class ClienteDTO implements Serializable {
     @NotBlank(message = " {campo.nome.obrigatorio}")
     private String nome;
 
-   @NotBlank(message = "{campo.sobrenome.obrigatorio}")
+    @NotBlank(message = "{campo.sobrenome.obrigatorio}")
     private String sobrenome;
 
     @NotBlank(message = "{campo.cpf.obrigatorio}")
     @CPF(message = "{campo.cpf.invalido}")
-    @UnicoCPF(message = "{campo.cpf.repetido}")
+    @ValorUnico(domainClass = Cliente.class, fieldName = "cpf", message = "{campo.cpf.repetido}")
     private String cpf;
 
     @NotBlank(message = "{campo.email.obrigatorio}")
     @Email(message = "{campo.email.invalido}")
-    @UnicoEmail(message = "{campo.email.repetido}")
+    @ValorUnico(domainClass = Cliente.class, fieldName = "email", message = "{campo.email.repetido}")
     private String email;
 
     @NotBlank(message = "{campo.cnh.obrigatorio}")
-    @UnicoCNH(message = "{campo.cnh.repetido}")
+    @ValorUnico(domainClass = Cliente.class, fieldName = "cnh", message = "{campo.cnh.repetido}")
     @Size(max = 11, min = 11, message = "{campo.cnh.ìnvalido}")
     private String cnh;
 
@@ -61,11 +58,11 @@ public class ClienteDTO implements Serializable {
                 .build();
     }
 
-    public boolean verificaTodosOsDadosEstaoCompletos(){
+    public boolean verificaTodosOsDadosEstaoCompletos() {
         return this.nome != null && !(this.sobrenome.isEmpty())
                 && this.sobrenome != null && !(this.sobrenome.isEmpty())
                 && this.email != null && !(this.email.isEmpty())
-                && this.cnh != null&& !(this.cnh.isEmpty())
+                && this.cnh != null && !(this.cnh.isEmpty())
                 && this.dataDeNascimento != null;
     }
 }

@@ -92,10 +92,10 @@ public class Cliente {
                 && this.endereco.verificaTodosCamposEstaoCompletos();
     }
 
-    public Long getId() {
-        if (this.id == null) {
-            throw new RecursoNaoEncontradoException("Não existe um id atrelado a esse cliente");
-        }
-        return this.id;
-    }
+//    public Long getId() {
+//        if (this.id == null) {
+//            throw new RecursoNaoEncontradoException("Não existe um id atrelado a esse cliente");
+//        }
+//        return this.id;
+//    }
 }
