@@ -1,7 +1,6 @@
 package io.github.monthalcantara.nossobancodigital.model;
 
-import io.github.monthalcantara.nossobancodigital.dto.request.EnderecoDTO;
-import io.github.monthalcantara.nossobancodigital.exception.RecursoNaoEncontradoException;
+import io.github.monthalcantara.nossobancodigital.dto.response.EnderecoResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,14 +34,29 @@ public class Endereco {
 
     private String estado;
 
-    public Endereco(EnderecoDTO enderecoDTO) {
-        this.cep = enderecoDTO.getCep();
-        this.rua = enderecoDTO.getRua();
-        this.bairro = enderecoDTO.getBairro();
-        this.complemento = enderecoDTO.getComplemento();
-        this.cidade = enderecoDTO.getCidade();
-        this.estado = enderecoDTO.getEstado();
+    public Endereco(String cep,
+                    String rua,
+                    String bairro,
+                    String complemento,
+                    String cidade,
+                    String estado) {
+        this.cep = cep;
+        this.rua = rua;
+        this.bairro = bairro;
+        this.complemento = complemento;
+        this.cidade = cidade;
+        this.estado = estado;
+    }
 
+    public EnderecoResponseDTO converteParaResponse() {
+        return EnderecoResponseDTO.builder()
+                .bairro(this.bairro)
+                .cep(this.cep)
+                .cidade(this.cidade)
+                .complemento(this.complemento)
+                .estado(this.estado)
+                .rua(this.rua)
+                .build();
     }
 
     public boolean verificaTodosCamposEstaoCompletos() {
@@ -70,10 +84,4 @@ public class Endereco {
         return Objects.hash(cep, bairro, cidade, estado);
     }
 
-    public Long getId() {
-        if (this.id == null) {
-            throw new RecursoNaoEncontradoException("Não existe um id atrelado a esse endereço");
-        }
-        return this.id;
-    }
 }

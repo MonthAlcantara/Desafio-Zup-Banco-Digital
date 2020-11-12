@@ -33,15 +33,8 @@ public class EnderecoDTO implements Serializable {
     @NotEmpty(message = "{campo.estado.obrigatorio}")
     private String estado;
 
-    public Endereco converteParaEndereco(EnderecoDTO endereco){
-        return Endereco.builder()
-                .bairro(endereco.getBairro())
-                .rua(endereco.getRua())
-                .cep(endereco.getCep())
-                .complemento(endereco.getComplemento())
-                .cidade(endereco.getCidade())
-                .estado(endereco.getEstado())
-                .build();
+    public Endereco converteParaEndereco(){
+        return new Endereco(this.cep,this.rua, this.bairro, this.complemento, this.cidade, this.estado);
     }
 
     public boolean verificaTodosCamposEstaoCompletos() {
