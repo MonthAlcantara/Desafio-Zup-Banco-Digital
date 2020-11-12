@@ -46,14 +46,14 @@ public class EnderecoServiceImpl implements EnderecoService {
         Assert.isTrue(enderecoDTO.verificaTodosCamposEstaoCompletos(), "Todos os dados do endereço devem estar completos");
         Cliente cliente = clienteService.busqueClientePeloId(id);
 
-        Endereco endereco = new Endereco(enderecoDTO);
+        Endereco endereco = enderecoDTO.converteParaEndereco();
         Assert.isTrue(endereco.verificaTodosCamposEstaoCompletos(), "Todos os dados do endereço devem estar completos");
         cliente.setEndereco(endereco);
         Assert.isTrue(cliente.verificaDadosCompletosPassoDois(), "Todos os dados do cliente e endereço devem estar completos");
         Endereco enderecoSalvo = enderecoRepository.save(endereco);
 
         clienteService.salveEnderecoCliente(cliente, enderecoSalvo);
-        return new Endereco(enderecoDTO);
+        return enderecoDTO.converteParaEndereco();
     }
 
     @Override
@@ -73,7 +73,7 @@ public class EnderecoServiceImpl implements EnderecoService {
     public Endereco atualizeEnderecoSeExistir(Long id, @NotNull EnderecoDTO enderecoDTO) {
         Assert.isTrue(enderecoDTO.verificaTodosCamposEstaoCompletos(), "Todos os campos do endereço devem ser informados");
         retorneSeExistirEnderecoComId(id);
-        Endereco endereco = new Endereco(enderecoDTO);
+        Endereco endereco = enderecoDTO.converteParaEndereco();
         endereco.setId(id);
         return enderecoRepository.save(endereco);
     }
