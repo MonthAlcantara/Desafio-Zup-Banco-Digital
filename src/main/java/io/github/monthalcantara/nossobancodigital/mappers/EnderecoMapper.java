@@ -10,10 +10,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface EnderecoMapper {
 
-    Endereco converteParaEndereco(EnderecoDTO enderecoDTO);
-
-    EnderecoResponseDTO converteParaEnderecoResponseDTO (Endereco endereco);
-
     List<EnderecoResponseDTO> converteParaListaEnderecoResponseDTO(List<Endereco> listaEnderecos);
 
     List<Endereco> converteParaListaEndereco(List<EnderecoDTO> listaEnderecosDTO);
