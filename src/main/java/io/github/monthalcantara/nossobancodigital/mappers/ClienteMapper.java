@@ -10,11 +10,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ClienteMapper {
 
-    Cliente converteParaCliente(ClienteDTO clienteDTO);
+    //List<ClienteResponseDTO> converteParaListaClienteResponseDTO(List<Cliente> listaClientes);
 
-    ClienteResponseDTO converteParaClienteResponseDTO (Cliente cliente);
-
-    List<ClienteResponseDTO> converteParaListaClienteResponseDTO(List<Cliente> listaClientes);
-
-    List<Cliente> converteParaListaCliente(List<ClienteDTO> listaClientesDTO);
 }

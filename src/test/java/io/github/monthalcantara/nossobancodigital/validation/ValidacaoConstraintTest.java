@@ -7,7 +7,6 @@ import io.github.monthalcantara.nossobancodigital.validation.annotations.MaiorId
 import io.github.monthalcantara.nossobancodigital.validation.validators.MaiorIdadeValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
@@ -33,25 +32,14 @@ public class ValidacaoConstraintTest {
 
 
     private ClienteDTO geradorDeClienteDTO() {
-        return ClienteDTO.builder()
-                .cnh("14797853560")
-                .cpf("81732968047")
-                .email("email@gmail.com")
-                .dataDeNascimento(null)
-                .nome("Cliente")
-                .sobrenome(" Teste")
-                .build();
+        LocalDate dataNascimento = LocalDate.of(1990, 10, 20);
+        return new ClienteDTO("Cliente"," Teste", "81732968047", "emailTest@gmail.com","14797853560",dataNascimento);
+
     }
 
     private Cliente geradorDeCliente() {
-        return Cliente.builder()
-                .cnh("14797853560")
-                .cpf("81732968047")
-                .email("emailTest@gmail.com")
-                .dataDeNascimento(LocalDate.parse("24/10/1990"))
-                .nome("Cliente")
-                .sobrenome(" Teste")
-                .build();
+        LocalDate dataNascimento = LocalDate.of(1990, 10, 20);
+        return new Cliente("Cliente"," Teste", "81732968047", "emailTest@gmail.com","14797853560",dataNascimento);
     }
 
     private String geradorDeJson(Object o) throws Exception {

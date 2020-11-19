@@ -15,7 +15,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,8 +23,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 import java.net.URI;
-
-import static org.springframework.http.HttpStatus.CREATED;
 
 @Api(value = "Endpoint de cadastro de clientes", description = "Cadastro de clientes seguindo passos Cliente > Endereço > Documento > Aceite", tags = {"Cadastro de clientes"})
 @RestController
@@ -51,7 +48,7 @@ public class CadastroClienteController {
     public ResponseEntity salveCliente(@RequestBody @Valid ClienteDTO client) {
         Cliente clienteSalvo = clienteService.salveNovoCliente(client);
         URI location = geradorLocation(clienteSalvo.getId(), "/{id}/endereco");
-        return ResponseEntity.status(CREATED).header(HttpHeaders.LOCATION, String.valueOf(location)).body(new ClienteResponseDTO(clienteSalvo));
+        return ResponseEntity.created(location).body(clienteSalvo.paraResponse());
     }
 
     @ApiOperation(value = "Salva dados de endereço do Cliente")
@@ -64,7 +61,7 @@ public class CadastroClienteController {
 
         URI location = geradorLocation(id, "/arquivo");
         EnderecoResponseDTO enderecoResponseDTO = new EnderecoResponseDTO(enderecoSalvo);
-        return ResponseEntity.status(CREATED).header(HttpHeaders.LOCATION, String.valueOf(location)).body(enderecoResponseDTO);
+        return ResponseEntity.created(location).body(enderecoResponseDTO);
     }
 
     @PostMapping("cliente/{id}/endereco/arquivo")
@@ -77,8 +74,8 @@ public class CadastroClienteController {
                                          @PathVariable("id") Long id) {
         documentoService.salveArquivosDocumentoCliente(diretorioArquivos, id, fotoDocumentoFrente, fotoDocumentoVerso);
         URI location = geradorLocation(id, "/aceite");
-        ClienteResponseDTO clienteResponseDTO = new ClienteResponseDTO(clienteService.busqueClientePeloId(id));
-        return ResponseEntity.status(CREATED).header(HttpHeaders.LOCATION, String.valueOf(location)).body(clienteResponseDTO);
+        ClienteResponseDTO clienteResponseDTO = clienteService.busqueClientePeloId(id).paraResponse();
+        return ResponseEntity.created(location).body(clienteResponseDTO);
 
     }
 

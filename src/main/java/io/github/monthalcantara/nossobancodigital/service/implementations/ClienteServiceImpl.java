@@ -18,8 +18,10 @@ import org.springframework.util.Assert;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
@@ -75,7 +77,7 @@ public class ClienteServiceImpl implements ClienteService {
     public Cliente atualizeClientePeloId(Long id, @NotNull ClienteDTO cliente) {
         Assert.isTrue(cliente.verificaTodosOsDadosEstaoCompletos(), "Todos os dados do cliente devem ser informados");
         busqueClientePeloId(id);
-        Cliente clienteAtualizado = cliente.converteParaCliente(cliente);
+        Cliente clienteAtualizado = cliente.paraCliente();
         clienteAtualizado.setId(id);
 
         return clienteRepository.save(clienteAtualizado);
@@ -85,7 +87,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public Cliente salveNovoCliente(ClienteDTO clienteDTO) {
         Assert.isTrue(clienteDTO.verificaTodosOsDadosEstaoCompletos(), "Todos os dados do cliente devem ser informados");
-        Cliente cliente = converteParaCliente(clienteDTO);
+        Cliente cliente = clienteDTO.paraCliente();
         return clienteRepository.save(cliente);
     }
 
@@ -110,12 +112,11 @@ public class ClienteServiceImpl implements ClienteService {
         return enderecoOptional.orElseThrow(() -> new RecursoNaoEncontradoException("O cliente de ID: " + id + " não possui endereço cadastrado"));
     }
 
-    private Cliente converteParaCliente(ClienteDTO cliente) {
-        return clienteMapper.converteParaCliente(cliente);
-    }
-
     private List<ClienteResponseDTO> converteParaListaClienteResponseDTO(List<Cliente> listaClientes) {
-        return clienteMapper.converteParaListaClienteResponseDTO(listaClientes);
+        List<ClienteResponseDTO> listaDto = listaClientes.stream()
+                .map(c -> c.paraResponse() )
+                .collect(Collectors.toList());
+        return listaDto;
     }
 
     private Page<ClienteResponseDTO> converteParaPageClienteResponseDTO(Page<Cliente> paginaClientes, Pageable pageable) {

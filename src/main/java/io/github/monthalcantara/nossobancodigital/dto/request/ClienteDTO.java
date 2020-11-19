@@ -14,10 +14,6 @@ import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class ClienteDTO implements Serializable {
 
     @NotBlank(message = " {campo.nome.obrigatorio}")
@@ -47,16 +43,52 @@ public class ClienteDTO implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate dataDeNascimento;
 
-    public Cliente converteParaCliente(ClienteDTO clienteDTO) {
-        return Cliente.builder()
-                .nome(clienteDTO.getNome())
-                .sobrenome(clienteDTO.getSobrenome())
-                .cpf(clienteDTO.getCpf())
-                .email(clienteDTO.getEmail())
-                .cnh(clienteDTO.getCnh())
-                .dataDeNascimento(clienteDTO.getDataDeNascimento())
-                .build();
+    @Deprecated
+    public ClienteDTO() {
     }
+
+    public ClienteDTO(@NotBlank String nome,
+                      @NotBlank String sobrenome,
+                      @NotBlank @CPF String cpf,
+                      @NotBlank @Email String email,
+                      @NotBlank @Size String cnh,
+                      @NotNull @Past LocalDate dataDeNascimento) {
+        this.nome = nome;
+        this.sobrenome = sobrenome;
+        this.cpf = cpf;
+        this.email = email;
+        this.cnh = cnh;
+        this.dataDeNascimento = dataDeNascimento;
+    }
+
+    public Cliente paraCliente() {
+        return new Cliente(this.nome, this.sobrenome, this.cpf, this.email, this.cnh, this.dataDeNascimento);
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getSobrenome() {
+        return sobrenome;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getCnh() {
+        return cnh;
+    }
+
+    public LocalDate getDataDeNascimento() {
+        return dataDeNascimento;
+    }
+
 
     public boolean verificaTodosOsDadosEstaoCompletos() {
         return this.nome != null && !(this.sobrenome.isEmpty())

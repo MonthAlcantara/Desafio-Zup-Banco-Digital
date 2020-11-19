@@ -24,9 +24,6 @@ public class DocumentoCliente implements Serializable {
     private Cliente cliente;
 
     public Long getId() {
-        if (this.id == null) {
-            throw new RecursoNaoEncontradoException("Não existe um id atrelado a esse documento");
-        }
         return this.id;
     }
 }

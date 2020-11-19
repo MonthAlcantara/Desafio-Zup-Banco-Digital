@@ -13,10 +13,6 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-@Builder
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class ClienteResponseDTO implements Serializable {
 
     private Long id;
@@ -43,19 +39,69 @@ public class ClienteResponseDTO implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Conta conta;
 
-    public ClienteResponseDTO(Cliente cliente) {
+    @Deprecated
+    public ClienteResponseDTO() {
+    }
 
-        this.id = cliente.getId();
-        this.nome = cliente.getNome();
-        this.sobrenome = cliente.getSobrenome();
-        this.cpf = cliente.getCpf();
-        this.email = cliente.getEmail();
-        this.cnh = cliente.getCnh();
-        this.dataDeNascimento = cliente.getDataDeNascimento();
-        this.documentoCliente = cliente.getDocumentoCliente();
-        if (cliente.getEndereco() != null) {
-            this.endereco = new EnderecoResponseDTO(cliente.getEndereco());
-        }
-        this.conta = cliente.getConta();
+    public ClienteResponseDTO(Long id,
+                              String nome,
+                              String sobrenome,
+                              String cpf,
+                              String email,
+                              String cnh,
+                              LocalDate dataDeNascimento,
+                              EnderecoResponseDTO endereco,
+                              DocumentoCliente documentoCliente,
+                              Conta conta) {
+        this.id = id;
+        this.nome = nome;
+        this.sobrenome = sobrenome;
+        this.cpf = cpf;
+        this.email = email;
+        this.cnh = cnh;
+        this.dataDeNascimento = dataDeNascimento;
+        this.endereco = endereco;
+        this.documentoCliente = documentoCliente;
+        this.conta = conta;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getSobrenome() {
+        return sobrenome;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getCnh() {
+        return cnh;
+    }
+
+    public LocalDate getDataDeNascimento() {
+        return dataDeNascimento;
+    }
+
+    public EnderecoResponseDTO getEndereco() {
+        return endereco;
+    }
+
+    public DocumentoCliente getDocumentoCliente() {
+        return documentoCliente;
+    }
+
+    public Conta getConta() {
+        return conta;
     }
 }

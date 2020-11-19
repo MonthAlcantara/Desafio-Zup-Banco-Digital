@@ -27,9 +27,6 @@ public class ClienteController {
     @Autowired
     ClienteService clienteService;
 
-    @Autowired
-    ClienteMapper clienteMapper;
-
     @GetMapping
     @ApiOperation(value = "Busca todos os clientes cadastrados na base de dados")
     @ApiResponses(value = {@ApiResponse(code = 404, message = "Clientes não localizados"),
@@ -49,7 +46,7 @@ public class ClienteController {
             @ApiResponse(code = 200, message = "Cliente localizado")})
     public ResponseEntity<ClienteResponseDTO> busqueClientePeloId(@PathVariable Long id) {
         Cliente clienteEncontradoPeloId = clienteService.busqueClientePeloId(id);
-        return new ResponseEntity(converteParaClienteResponseDTO(clienteEncontradoPeloId), HttpStatus.OK);
+        return new ResponseEntity(clienteEncontradoPeloId.paraResponse(), HttpStatus.OK);
     }
 
     @GetMapping("/nome/{nome}")
@@ -100,7 +97,7 @@ public class ClienteController {
             @ApiResponse(code = 200, message = "Cliente atualizado com sucesso")})
     public ResponseEntity atualizeClientePeloId(@PathVariable Long id, @RequestBody @Valid ClienteDTO cliente) {
         Cliente clienteEncontrado = clienteService.atualizeClientePeloId(id, cliente);
-        return new ResponseEntity<>(converteParaClienteResponseDTO(clienteEncontrado), HttpStatus.OK);
+        return new ResponseEntity<>(clienteEncontrado.paraResponse(), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -113,8 +110,5 @@ public class ClienteController {
         clienteService.deleteClientePeloId(id);
     }
 
-    private ClienteResponseDTO converteParaClienteResponseDTO(Cliente cliente) {
-        return clienteMapper.converteParaClienteResponseDTO(cliente);
-    }
 }
 
