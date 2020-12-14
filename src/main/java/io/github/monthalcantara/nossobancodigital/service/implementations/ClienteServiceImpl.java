@@ -3,7 +3,6 @@ package io.github.monthalcantara.nossobancodigital.service.implementations;
 import io.github.monthalcantara.nossobancodigital.dto.request.ClienteDTO;
 import io.github.monthalcantara.nossobancodigital.dto.response.ClienteResponseDTO;
 import io.github.monthalcantara.nossobancodigital.exception.RecursoNaoEncontradoException;
-import io.github.monthalcantara.nossobancodigital.mappers.ClienteMapper;
 import io.github.monthalcantara.nossobancodigital.model.Cliente;
 import io.github.monthalcantara.nossobancodigital.model.Endereco;
 import io.github.monthalcantara.nossobancodigital.repository.ClienteRepository;
@@ -18,7 +17,6 @@ import org.springframework.util.Assert;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,11 +24,11 @@ import java.util.stream.Collectors;
 @Service
 public class ClienteServiceImpl implements ClienteService {
 
-    @Autowired
     ClienteRepository clienteRepository;
 
-    @Autowired
-    ClienteMapper clienteMapper;
+    public ClienteServiceImpl(ClienteRepository clienteRepository) {
+        this.clienteRepository = clienteRepository;
+    }
 
     @Override
     public Page<ClienteResponseDTO> busqueTodosClientes(Pageable pageable) {

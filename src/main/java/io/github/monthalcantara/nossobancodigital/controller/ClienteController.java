@@ -2,7 +2,6 @@ package io.github.monthalcantara.nossobancodigital.controller;
 
 import io.github.monthalcantara.nossobancodigital.dto.request.ClienteDTO;
 import io.github.monthalcantara.nossobancodigital.dto.response.ClienteResponseDTO;
-import io.github.monthalcantara.nossobancodigital.mappers.ClienteMapper;
 import io.github.monthalcantara.nossobancodigital.model.Cliente;
 import io.github.monthalcantara.nossobancodigital.service.interfaces.ClienteService;
 import io.swagger.annotations.Api;
@@ -24,8 +23,11 @@ import javax.validation.Valid;
 @RequestMapping("v1/admin/cliente")
 public class ClienteController {
 
-    @Autowired
     ClienteService clienteService;
+
+    public ClienteController(ClienteService clienteService) {
+        this.clienteService = clienteService;
+    }
 
     @GetMapping
     @ApiOperation(value = "Busca todos os clientes cadastrados na base de dados")

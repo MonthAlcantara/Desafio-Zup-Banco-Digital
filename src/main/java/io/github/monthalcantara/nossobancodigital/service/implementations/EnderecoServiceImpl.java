@@ -3,7 +3,6 @@ package io.github.monthalcantara.nossobancodigital.service.implementations;
 import io.github.monthalcantara.nossobancodigital.dto.request.EnderecoDTO;
 import io.github.monthalcantara.nossobancodigital.dto.response.EnderecoResponseDTO;
 import io.github.monthalcantara.nossobancodigital.exception.RecursoNaoEncontradoException;
-import io.github.monthalcantara.nossobancodigital.mappers.EnderecoMapper;
 import io.github.monthalcantara.nossobancodigital.model.Cliente;
 import io.github.monthalcantara.nossobancodigital.model.Endereco;
 import io.github.monthalcantara.nossobancodigital.repository.EnderecoRepository;
@@ -24,14 +23,15 @@ import java.util.List;
 @Service
 public class EnderecoServiceImpl implements EnderecoService {
 
-    @Autowired
+
     EnderecoRepository enderecoRepository;
 
-    @Autowired
     ClienteService clienteService;
 
-    @Autowired
-    EnderecoMapper enderecoMapper;
+    public EnderecoServiceImpl(EnderecoRepository enderecoRepository, ClienteService clienteService) {
+        this.enderecoRepository = enderecoRepository;
+        this.clienteService = clienteService;
+    }
 
     @Override
     public Page<EnderecoResponseDTO> busqueTodosClientes(Pageable pageable) {
@@ -92,7 +92,7 @@ public class EnderecoServiceImpl implements EnderecoService {
     }
 
     private List<EnderecoResponseDTO> converteParaListaEnderecoResponseDTO(List<Endereco> listaEndereco) {
-        return enderecoMapper.converteParaListaEnderecoResponseDTO(listaEndereco);
+        return null;//enderecoMapper.converteParaListaEnderecoResponseDTO(listaEndereco);
     }
 
     private Page<EnderecoResponseDTO> converteParaPageEnderecoResponseDTO(Page<Endereco> paginaEnderecos, Pageable pageable) {

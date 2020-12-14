@@ -22,8 +22,11 @@ import javax.validation.Valid;
 @RequestMapping("v1/admin/endereco")
 public class EnderecoController {
 
-    @Autowired
     EnderecoService enderecoService;
+
+    public EnderecoController(EnderecoService enderecoService) {
+        this.enderecoService = enderecoService;
+    }
 
     @GetMapping
     @ApiOperation(value = "Busca todos os Endereços cadastrados na base de dados")

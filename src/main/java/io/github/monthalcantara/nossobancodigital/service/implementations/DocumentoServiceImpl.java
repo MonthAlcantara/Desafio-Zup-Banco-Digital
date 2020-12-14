@@ -19,14 +19,20 @@ import java.nio.file.Paths;
 @Service
 public class DocumentoServiceImpl implements DocumentoService {
 
-    @Autowired
+
     ClienteService clienteService;
 
-    @Autowired
     ClienteRepository clienteRepository;
 
-    @Autowired
     DocumentoRepository documentoRepository;
+
+    public DocumentoServiceImpl(ClienteService clienteService,
+                                ClienteRepository clienteRepository,
+                                DocumentoRepository documentoRepository) {
+        this.clienteService = clienteService;
+        this.clienteRepository = clienteRepository;
+        this.documentoRepository = documentoRepository;
+    }
 
     @Transactional
     @Override

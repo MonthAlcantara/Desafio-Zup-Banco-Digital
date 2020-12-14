@@ -32,14 +32,19 @@ public class CadastroClienteController {
     @Value("${caminho-arquivos-pasta}")
     String diretorioArquivos;
 
-    @Autowired
     ClienteService clienteService;
 
-    @Autowired
     EnderecoService enderecoService;
 
-    @Autowired
     DocumentoService documentoService;
+
+    public CadastroClienteController(ClienteService clienteService,
+                                     EnderecoService enderecoService,
+                                     DocumentoService documentoService) {
+        this.clienteService = clienteService;
+        this.enderecoService = enderecoService;
+        this.documentoService = documentoService;
+    }
 
     @PostMapping("/cliente")
     @ApiOperation(value = "Salva dados do Cliente")
