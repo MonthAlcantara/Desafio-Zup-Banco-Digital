@@ -23,7 +23,7 @@ import javax.validation.Valid;
 @RequestMapping("v1/admin/cliente")
 public class ClienteController {
 
-    ClienteService clienteService;
+    private ClienteService clienteService;
 
     public ClienteController(ClienteService clienteService) {
         this.clienteService = clienteService;

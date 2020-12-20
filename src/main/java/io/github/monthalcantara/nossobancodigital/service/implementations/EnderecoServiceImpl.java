@@ -8,7 +8,6 @@ import io.github.monthalcantara.nossobancodigital.model.Endereco;
 import io.github.monthalcantara.nossobancodigital.repository.EnderecoRepository;
 import io.github.monthalcantara.nossobancodigital.service.interfaces.ClienteService;
 import io.github.monthalcantara.nossobancodigital.service.interfaces.EnderecoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -19,14 +18,15 @@ import javax.transaction.Transactional;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EnderecoServiceImpl implements EnderecoService {
 
 
-    EnderecoRepository enderecoRepository;
+    private EnderecoRepository enderecoRepository;
 
-    ClienteService clienteService;
+    private ClienteService clienteService;
 
     public EnderecoServiceImpl(EnderecoRepository enderecoRepository, ClienteService clienteService) {
         this.enderecoRepository = enderecoRepository;
@@ -62,14 +62,15 @@ public class EnderecoServiceImpl implements EnderecoService {
     }
 
     @Override
+    @Transactional
     public Endereco busqueEnderecoPeloCep(@NotBlank String cep) {
         Assert.hasText(cep, "O cep do endereço pprecisa ser informado");
         return enderecoRepository.findByCep(cep)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Não foi encontrado endereco com esse cep: " + cep));
     }
 
-    @Transactional
     @Override
+    @Transactional
     public Endereco atualizeEnderecoSeExistir(Long id, @NotNull EnderecoDTO enderecoDTO) {
         Assert.isTrue(enderecoDTO.verificaTodosCamposEstaoCompletos(), "Todos os campos do endereço devem ser informados");
         retorneSeExistirEnderecoComId(id);
@@ -78,26 +79,27 @@ public class EnderecoServiceImpl implements EnderecoService {
         return enderecoRepository.save(endereco);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void deleteEnderecoPeloId(Long id) {
         Endereco enderecoEncontrado = retorneSeExistirEnderecoComId(id);
         enderecoRepository.delete(enderecoEncontrado);
     }
 
     @Override
+    @Transactional
     public Endereco retorneSeExistirEnderecoComId(Long id) {
         return enderecoRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Não foi encontrado endereco com esse id: " + id));
     }
 
-    private List<EnderecoResponseDTO> converteParaListaEnderecoResponseDTO(List<Endereco> listaEndereco) {
-        return null;//enderecoMapper.converteParaListaEnderecoResponseDTO(listaEndereco);
+    private Page<EnderecoResponseDTO> converteParaPageEnderecoResponseDTO(Page<Endereco> paginaEnderecos, Pageable pageable) {
+        List<EnderecoResponseDTO> dtos = converteParaListaEnderecoResponseDTO(paginaEnderecos);
+        return new PageImpl<>(dtos, pageable, paginaEnderecos.getTotalElements());
     }
 
-    private Page<EnderecoResponseDTO> converteParaPageEnderecoResponseDTO(Page<Endereco> paginaEnderecos, Pageable pageable) {
-        List<EnderecoResponseDTO> dtos = converteParaListaEnderecoResponseDTO(paginaEnderecos.getContent());
-        return new PageImpl<>(dtos, pageable, paginaEnderecos.getTotalElements());
+    private List<EnderecoResponseDTO> converteParaListaEnderecoResponseDTO(Page<Endereco> paginaEnderecos) {
+        return paginaEnderecos.getContent().stream().map(endereco -> new EnderecoResponseDTO(endereco)).collect(Collectors.toList());
     }
 
 }

@@ -32,11 +32,9 @@ public class CadastroClienteController {
     @Value("${caminho-arquivos-pasta}")
     String diretorioArquivos;
 
-    ClienteService clienteService;
-
-    EnderecoService enderecoService;
-
-    DocumentoService documentoService;
+    private ClienteService clienteService;
+    private EnderecoService enderecoService;
+    private DocumentoService documentoService;
 
     public CadastroClienteController(ClienteService clienteService,
                                      EnderecoService enderecoService,

@@ -22,7 +22,7 @@ import javax.validation.Valid;
 @RequestMapping("v1/admin/endereco")
 public class EnderecoController {
 
-    EnderecoService enderecoService;
+    private EnderecoService enderecoService;
 
     public EnderecoController(EnderecoService enderecoService) {
         this.enderecoService = enderecoService;
@@ -70,5 +70,4 @@ public class EnderecoController {
         Endereco enderecoAtualizado = enderecoService.atualizeEnderecoSeExistir(id, endereco);
         return ResponseEntity.ok(enderecoAtualizado.converteParaResponse());
     }
-
 }
