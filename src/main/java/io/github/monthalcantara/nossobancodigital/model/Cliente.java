@@ -2,12 +2,7 @@ package io.github.monthalcantara.nossobancodigital.model;
 
 import io.github.monthalcantara.nossobancodigital.dto.response.ClienteResponseDTO;
 import io.github.monthalcantara.nossobancodigital.dto.response.EnderecoResponseDTO;
-import io.github.monthalcantara.nossobancodigital.exception.RecursoNaoEncontradoException;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.br.CPF;
+import io.github.monthalcantara.nossobancodigital.validation.annotations.CPFOuCNPJ;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -33,8 +28,8 @@ public class Cliente {
     @Column(length = 100)
     private String sobrenome;
 
+    @CPFOuCNPJ
     @NotBlank
-    @CPF
     @Column(unique = true, nullable = false)
     private String cpf;
 
@@ -69,7 +64,7 @@ public class Cliente {
 
     public Cliente(@NotBlank String nome,
                    @NotBlank String sobrenome,
-                   @NotBlank @CPF String cpf,
+                   @NotBlank String cpf,
                    @NotBlank @Email String email,
                    @NotBlank String cnh,
                    @NotNull @Past LocalDate dataDeNascimento) {

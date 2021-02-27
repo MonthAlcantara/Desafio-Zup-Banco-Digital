@@ -2,13 +2,9 @@ package io.github.monthalcantara.nossobancodigital.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.monthalcantara.nossobancodigital.model.Cliente;
+import io.github.monthalcantara.nossobancodigital.validation.annotations.CPFOuCNPJ;
 import io.github.monthalcantara.nossobancodigital.validation.annotations.MaiorIdade;
 import io.github.monthalcantara.nossobancodigital.validation.annotations.ValorUnico;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.br.CPF;
 
 import javax.validation.constraints.*;
 import java.io.Serializable;
@@ -16,14 +12,14 @@ import java.time.LocalDate;
 
 public class ClienteDTO implements Serializable {
 
-    @NotBlank(message = " {campo.nome.obrigatorio}")
+    @NotBlank(message = "{campo.nome.obrigatorio}")
     private String nome;
 
     @NotBlank(message = "{campo.sobrenome.obrigatorio}")
     private String sobrenome;
 
     @NotBlank(message = "{campo.cpf.obrigatorio}")
-    @CPF(message = "{campo.cpf.invalido}")
+    @CPFOuCNPJ
     @ValorUnico(domainClass = Cliente.class, fieldName = "cpf", message = "{campo.cpf.repetido}")
     private String cpf;
 
@@ -49,7 +45,7 @@ public class ClienteDTO implements Serializable {
 
     public ClienteDTO(@NotBlank String nome,
                       @NotBlank String sobrenome,
-                      @NotBlank @CPF String cpf,
+                      @NotBlank String cpf,
                       @NotBlank @Email String email,
                       @NotBlank @Size String cnh,
                       @NotNull @Past LocalDate dataDeNascimento) {
