@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-public class ClienteServiceTest {
+class ClienteServiceTest {
     Cliente cliente, clienteSalvo;
 
     @Autowired
@@ -40,38 +40,38 @@ public class ClienteServiceTest {
 
     @Test
     @DisplayName("Deve buscar todos os clientes")
-    public void busqueTodosClientesTest() {
+     void busqueTodosClientesTest() {
         Mockito.when(clienteRepository.findAll(pageable)).thenReturn(page);
         Assertions.assertNotNull(clienteService.busqueTodosClientes(pageable));
     }
 
     @Test
     @DisplayName("Deve buscar página de cliente pelo nome")
-    public void buscaClientePeloNome() {
+    void buscaClientePeloNome() {
         Mockito.when(clienteRepository.findAllByNome("maria", pageable)).thenReturn(Optional.of(page));
         Assertions.assertNotNull(clienteService.busqueClientePeloNome("maria", pageable));
     }
 
     @Test
     @DisplayName("Deve lançar erro ao receber nome do cliente vazio pelo nome")
-    public void buscaClientePeloNomeException01() {
+    void buscaClientePeloNomeException01() {
         RuntimeException runtimeException = Assertions.assertThrows(IllegalArgumentException.class,
                 () -> clienteService.busqueClientePeloNome(" ", pageable));
-        Assertions.assertEquals(runtimeException.getMessage(), "O campo nome não pode ser vazio");
+        Assertions.assertEquals("O campo nome não pode ser vazio", runtimeException.getMessage());
     }
 
     @Test
     @DisplayName("Deve lançar erro ao não encontrar cliente vazio pelo nome")
-    public void buscaClientePeloNomeException02() {
+    void buscaClientePeloNomeException02() {
         Mockito.when(clienteRepository.findAllByNome("maria", pageable)).thenReturn(Optional.empty());
         RuntimeException runtimeException = Assertions.assertThrows(IllegalArgumentException.class,
                 () -> clienteService.busqueClientePeloNome(" ", pageable));
-        Assertions.assertEquals(runtimeException.getMessage(), "O campo nome não pode ser vazio");
+        Assertions.assertEquals("O campo nome não pode ser vazio", runtimeException.getMessage());
     }
 
     @Test
     @DisplayName("Deve buscar cliente pelo id")
-    public void busqueClientePeloIdTest() {
+    void busqueClientePeloIdTest() {
         cliente = geradorDeCliente();
         BDDMockito.given(clienteRepository.findById(Mockito.any(Long.class))).willReturn(Optional.of(cliente));
         clienteSalvo = clienteService.busqueClientePeloId(1L);
@@ -80,18 +80,18 @@ public class ClienteServiceTest {
 
     @Test
     @DisplayName("Deve lançar erro ao não encontrar cliente pelo id")
-    public void busqueClientePeloIdExceptionTest() {
+    void busqueClientePeloIdExceptionTest() {
 
         RuntimeException runtimeException = assertThrows(RecursoNaoEncontradoException.class, () ->
                 clienteService.busqueClientePeloId(1L));
 
-        assertEquals(runtimeException.getMessage(), "Não existe cliente cadastrado com o ID: 1");
+        assertEquals("Não existe cliente cadastrado com o ID: 1", runtimeException.getMessage());
 
     }
 
     @Test
     @DisplayName("Deve buscar cliente pelo CPF")
-    public void busqueClientePeloCPFTest() {
+    void busqueClientePeloCPFTest() {
 
         cliente = geradorDeCliente();
         BDDMockito.given(clienteRepository.findByCpf(Mockito.any(String.class))).willReturn(Optional.of(cliente));
@@ -101,19 +101,19 @@ public class ClienteServiceTest {
 
     @Test
     @DisplayName("Deve lançar erro ao não encontrar cliente pelo cpf")
-    public void busqueClientePeloCPFExceptionTest() {
+    void busqueClientePeloCPFExceptionTest() {
 
         RuntimeException runtimeException = assertThrows(RecursoNaoEncontradoException.class, () ->
                 clienteService.busqueClientePeloCPF("81732968047"));
 
 
-        assertEquals(runtimeException.getMessage(), "Não existe cliente cadastrado com o CPF: 81732968047");
+        assertEquals("Não existe cliente cadastrado com o CPF: 81732968047", runtimeException.getMessage());
 
     }
 
     @Test
     @DisplayName("Deve buscar cliente pela CNH")
-    public void busqueClientePelaCNHTest() {
+    void busqueClientePelaCNHTest() {
         cliente = geradorDeCliente();
         BDDMockito.given(clienteRepository.findByCnh(Mockito.any(String.class))).willReturn(Optional.of(cliente));
         clienteSalvo = clienteService.busqueClientePelaCNH("14797853560");
@@ -122,19 +122,19 @@ public class ClienteServiceTest {
 
     @Test
     @DisplayName("Deve lançar erro ao não encontrar cliente pela cnh")
-    public void busqueClientePeloCNHExceptionTest() {
+    void busqueClientePeloCNHExceptionTest() {
 
         RuntimeException runtimeException = assertThrows(RecursoNaoEncontradoException.class, () ->
                 clienteService.busqueClientePelaCNH("81732968047"));
 
 
-        assertEquals(runtimeException.getMessage(), "Não existe cliente cadastrado com a CNH: 81732968047");
+        assertEquals("Não existe cliente cadastrado com a CNH: 81732968047", runtimeException.getMessage());
 
     }
 
     @Test
     @DisplayName("Deve buscar cliente pelo Email")
-    public void busqueClientePeloEmailTest() {
+    void busqueClientePeloEmailTest() {
         cliente = geradorDeCliente();
         BDDMockito.given(clienteRepository.findByEmail(Mockito.any(String.class))).willReturn(Optional.of(cliente));
         clienteSalvo = clienteService.busqueClientePeloEmail("emailTest@gmail.com");
@@ -144,7 +144,7 @@ public class ClienteServiceTest {
 
     @Test
     @DisplayName("Deve criar um novo cliente")
-    public void salveNovoClienteTest() {
+    void salveNovoClienteTest() {
         cliente = geradorDeCliente();
         BDDMockito.given(clienteRepository.save(Mockito.any(Cliente.class))).willReturn(cliente);
         cliente = clienteService.salveNovoCliente(geradorDeClienteDTO());
@@ -153,11 +153,11 @@ public class ClienteServiceTest {
 
     @Test
     @DisplayName("Deve deletar cliente pelo id")
-    public void deleteClientePeloIdTest() {
+    void deleteClientePeloIdTest() {
         RuntimeException runtimeException = assertThrows(RecursoNaoEncontradoException.class, () ->
                 clienteService.deleteClientePeloId(1L));
 
-        assertEquals(runtimeException.getMessage(), "Não existe cliente cadastrado com o ID: 1");
+        assertEquals("Não existe cliente cadastrado com o ID: 1", runtimeException.getMessage());
     }
 
 

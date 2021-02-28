@@ -1,8 +1,5 @@
 package io.github.monthalcantara.nossobancodigital.validation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.monthalcantara.nossobancodigital.dto.request.ClienteDTO;
-import io.github.monthalcantara.nossobancodigital.model.Cliente;
 import io.github.monthalcantara.nossobancodigital.validation.annotations.MaiorIdade;
 import io.github.monthalcantara.nossobancodigital.validation.validators.MaiorIdadeValidator;
 import org.junit.jupiter.api.Assertions;
@@ -13,7 +10,7 @@ import org.mockito.Mockito;
 
 import java.time.LocalDate;
 
-public class ValidacaoConstraintTest {
+class ValidacaoMaiorIdadeTest {
 
 
     @DisplayName("Deve validar a data de Nascimento")
@@ -28,22 +25,6 @@ public class ValidacaoConstraintTest {
         LocalDate dezoitoAnos = LocalDate.now().minusYears(idadeTest);
         boolean valido = idadeValidator.isValid(dezoitoAnos, null);
         Assertions.assertEquals(resultadoEsperado, valido);
-    }
-
-
-    private ClienteDTO geradorDeClienteDTO() {
-        LocalDate dataNascimento = LocalDate.of(1990, 10, 20);
-        return new ClienteDTO("Cliente"," Teste", "81732968047", "emailTest@gmail.com","14797853560",dataNascimento);
-
-    }
-
-    private Cliente geradorDeCliente() {
-        LocalDate dataNascimento = LocalDate.of(1990, 10, 20);
-        return new Cliente("Cliente"," Teste", "81732968047", "emailTest@gmail.com","14797853560",dataNascimento);
-    }
-
-    private String geradorDeJson(Object o) throws Exception {
-        return new ObjectMapper().writeValueAsString(o);
     }
 }
 

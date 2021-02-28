@@ -24,7 +24,7 @@ import java.util.Optional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class EnderecoServiceTest {
+class EnderecoServiceTest {
 
     Endereco endereco, enderecoSalvo;
 
@@ -45,30 +45,33 @@ public class EnderecoServiceTest {
 
     @Test
     @DisplayName("Deve buscar todos os endereços cadastrados")
-    public void busqueTodosClientes() {
+    void busqueTodosClientes() {
         BDDMockito.given(enderecoRepository.findAll(Mockito.any(Pageable.class))).willReturn(paginaEnderecos);
+
         Assertions.assertNotNull(enderecoService.busqueTodosClientes(pageable));
     }
 
     @Test
     @DisplayName("Deve retornar erro ao não encontrar endereco pelo id")
-    public void retorneSeExistirEnderecoComIdExceptionTest() {
+    void retorneSeExistirEnderecoComIdExceptionTest() {
         BDDMockito.given(enderecoRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(endereco));
         RuntimeException runtimeException = Assertions.assertThrows(RecursoNaoEncontradoException.class, () -> enderecoService.busqueEnderecoPeloId(1L));
+
         Assertions.assertTrue(runtimeException.getMessage().contains("Não foi encontrado endereco com esse id: 1"));
     }
 
     @Test
     @DisplayName("Deve retornar erro ao não encontrar endereco pelo cep")
-    public void busqueEnderecoPeloCepExceptionTest() {
+    void busqueEnderecoPeloCepExceptionTest() {
         BDDMockito.given(enderecoRepository.findByCep(Mockito.anyString())).willReturn(Optional.ofNullable(endereco));
         RuntimeException runtimeException = Assertions.assertThrows(RecursoNaoEncontradoException.class, () -> enderecoService.busqueEnderecoPeloCep("42000000"));
+
         Assertions.assertTrue(runtimeException.getMessage().contains("Não foi encontrado endereco com esse cep: 42000000"));
     }
 
     @Test
     @DisplayName("Deve criar um novo endereço")
-    public void salveNovoEnderecoTest() {
+    void salveNovoEnderecoTest() {
         endereco = geradorDeEndereco();
         BDDMockito.given(clienteService.busqueClientePeloId(Mockito.anyLong())).willReturn(geradorDeCliente());
         BDDMockito.given(enderecoRepository.save(Mockito.any(Endereco.class))).willReturn(endereco);
@@ -80,17 +83,19 @@ public class EnderecoServiceTest {
 
     @Test
     @DisplayName("Deve buscar endereço pelo Id")
-    public void busqueEnderecoPeloIdTest() {
+    void busqueEnderecoPeloIdTest() {
         BDDMockito.given(enderecoRepository.findById(Mockito.anyLong())).willReturn(Optional.of(geradorDeEndereco()));
         endereco = enderecoService.busqueEnderecoPeloId(1L);
+
         Assertions.assertNotNull(endereco);
     }
 
     @Test
     @DisplayName("Deve buscar endereço pelo CEP")
-    public void busqueEnderecoPeloCepTest() {
+    void busqueEnderecoPeloCepTest() {
         BDDMockito.given(enderecoRepository.findByCep(Mockito.any(String.class))).willReturn(Optional.of(geradorDeEndereco()));
         endereco = enderecoService.busqueEnderecoPeloCep("42000000");
+
         Assertions.assertNotNull(endereco);
     }
 
