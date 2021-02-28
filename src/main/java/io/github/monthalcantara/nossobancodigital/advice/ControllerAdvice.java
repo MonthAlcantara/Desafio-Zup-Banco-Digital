@@ -3,9 +3,9 @@ package io.github.monthalcantara.nossobancodigital.advice;
 import io.github.monthalcantara.nossobancodigital.exception.RecursoNaoEncontradoException;
 import io.github.monthalcantara.nossobancodigital.exception.ViolacaoRegraNegocioException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MultipartException;
 
@@ -17,56 +17,47 @@ import java.util.stream.Collectors;
 public class ControllerAdvice {
 
     @ExceptionHandler(RecursoNaoEncontradoException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrosApi recursoNaoEncontradoException(RecursoNaoEncontradoException e) {
-        return new ErrosApi(e.getMessage());
+    public ResponseEntity recursoNaoEncontradoException(RecursoNaoEncontradoException e) {
+        return new ResponseEntity(transformError(e.getMessage()), HttpStatus.NOT_FOUND);
     }
 
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrosApi handleMethodNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity handleMethodNotValidException(MethodArgumentNotValidException e) {
         List<String> listErrors = e.getBindingResult()
                 .getAllErrors()
                 .stream()
                 .map(objectError -> objectError.getDefaultMessage())
                 .collect(Collectors.toList());
-        return new ErrosApi(listErrors);
+        return new ResponseEntity(new ErrosApi(listErrors), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrosApi handleConstraintViolationException(ConstraintViolationException e) {
-        return new ErrosApi(e.getMessage());
+    public ResponseEntity handleConstraintViolationException(ConstraintViolationException e) {
+        return new ResponseEntity(transformError(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MultipartException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrosApi tamanhoMaximoArquivoException(MultipartException e) {
-        return new ErrosApi(e.getMessage());
+    public ResponseEntity tamanhoMaximoArquivoException(MultipartException e) {
+        return new ResponseEntity(transformError(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ViolacaoRegraNegocioException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrosApi violacaoRegraNegocioException(ViolacaoRegraNegocioException e) {
-        return new ErrosApi(e.getMessage());
+    public ResponseEntity violacaoRegraNegocioException(ViolacaoRegraNegocioException e) {
+        return new ResponseEntity(transformError(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrosApi illegalArgumentException(IllegalArgumentException e) {
-        return new ErrosApi(e.getMessage());
+    public ResponseEntity illegalArgumentException(IllegalArgumentException e) {
+        return new ResponseEntity(transformError(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
-
-//    @ExceptionHandler(NullPointerException.class)
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    public ErrosApi nullPointerException(NullPointerException e) {
-//        return new ErrosApi(e.getMessage());
-//    }
 
     @ExceptionHandler(IllegalStateException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrosApi illegalStateException(IllegalStateException e) {
-        return new ErrosApi(e.getMessage());
+    public ResponseEntity illegalStateException(IllegalStateException e) {
+        return new ResponseEntity(transformError(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
+    private ErrosApi transformError(String message) {
+        return new ErrosApi(message);
+    }
 }
