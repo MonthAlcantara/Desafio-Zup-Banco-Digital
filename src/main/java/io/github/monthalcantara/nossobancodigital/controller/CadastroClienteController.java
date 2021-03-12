@@ -13,7 +13,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 import java.net.URI;
+import java.util.function.Function;
 
 @Api(value = "Endpoint de cadastro de clientes", description = "Cadastro de clientes seguindo passos Cliente > Endereço > Documento > Aceite", tags = {"Cadastro de clientes"})
 @RestController
@@ -87,10 +87,10 @@ public class CadastroClienteController {
     @ApiResponses(value = {@ApiResponse(code = 404, message = "Não foi possível criar o Documento"),
             @ApiResponse(code = 422, message = "Necessario Cadastrar o Cliente, Endereço e Documento de identificação"),
             @ApiResponse(code = 200, message = "Aceite recebido com sucesso")})
-    public String aceiteContrato(@PathVariable("id") Long id, @PathParam("aceite") Boolean aceite) {
+    public ResponseEntity aceiteContrato(@PathVariable("id") Long id, @PathParam("aceite") Boolean aceite) {
         Cliente cliente = clienteService.retorneSeExistirEnderecoParaClienteComId(id);
         enderecoService.retorneSeExistirEnderecoComId(id);
-        return (aceite ? "Que ótima notícia " + cliente.getNome() + "!!! Iremos criar a sua conta" : "É uma pena " + cliente.getNome() + " =/ Vamos dar um tempo para você pensar melhor");
+        return ResponseEntity.ok(montaMensagemSaida(cliente.getNome()).apply(aceite));
     }
 
 
@@ -101,5 +101,11 @@ public class CadastroClienteController {
                 .path(proximoPassoCadastro)
                 .buildAndExpand(clienteAtualizado.getId())
                 .toUri();
+    }
+
+    private Function<Boolean, String> montaMensagemSaida(String nomeCliente) {
+        String mensagemSucesso = new StringBuilder().append(nomeCliente).append("!!! Iremos criar a sua conta").toString();
+        String mensagemRecusa = new StringBuilder().append("É uma pena ").append(nomeCliente).append(" =/ Vamos dar um tempo para você pensar melhor").toString();
+        return fn -> fn ? mensagemSucesso : mensagemRecusa;
     }
 }
