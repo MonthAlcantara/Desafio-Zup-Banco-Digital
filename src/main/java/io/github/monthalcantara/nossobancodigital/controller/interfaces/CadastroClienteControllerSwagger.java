@@ -22,20 +22,20 @@ public interface CadastroClienteControllerSwagger {
 
 
     @ApiOperation(value = "Salva dados do Cliente")
-    @ApiResponses(value = {@ApiResponse(code = 404, message = "Não foi possível criar o Cliente"),
+    @ApiResponses(value = {@ApiResponse(code = 400, message = "Erro de validação de algum dos campos informados"),
             @ApiResponse(code = 201, message = "Cliente criado com sucesso")})
     public ResponseEntity salveCliente(@RequestBody @Valid ClienteDTO client);
 
 
     @ApiOperation(value = "Salva dados de endereço do Cliente")
-    @ApiResponses(value = {@ApiResponse(code = 404, message = "Não foi possível criar o Endereço"),
+    @ApiResponses(value = {@ApiResponse(code = 400, message = "Erro de validação de algum dos campos informados"),
             @ApiResponse(code = 422, message = "Necessario Cadastrar o Cliente"),
             @ApiResponse(code = 201, message = "Endereço criado com sucesso")})
     public ResponseEntity salveEndereco(@RequestBody @Valid EnderecoDTO endereco, @PathVariable("id") Long id);
 
 
     @ApiOperation(value = "Salva documentos de identificação do cliente (frente e verso)")
-    @ApiResponses(value = {@ApiResponse(code = 404, message = "Não foi possível criar o Documento"),
+    @ApiResponses(value = {@ApiResponse(code = 400, message = "Erro de validação de algum dos campos informados"),
             @ApiResponse(code = 422, message = "Necessario Cadastrar o Cliente e Endereço"),
             @ApiResponse(code = 201, message = "Documento salvo com sucesso")})
     public ResponseEntity salveDocumento(@RequestParam("frente") MultipartFile fotoDocumentoFrente,
@@ -43,7 +43,7 @@ public interface CadastroClienteControllerSwagger {
                                          @PathVariable("id") Long id);
 
     @ApiOperation(value = "Recebe aceite do cliente a proposta de abertura de conta")
-    @ApiResponses(value = {@ApiResponse(code = 404, message = "Não foi possível criar o Documento"),
+    @ApiResponses(value = {@ApiResponse(code = 400, message = "Erro de validação de algum dos campos informados"),
             @ApiResponse(code = 422, message = "Necessario Cadastrar o Cliente, Endereço e Documento de identificação"),
             @ApiResponse(code = 200, message = "Aceite recebido com sucesso")})
     public ResponseEntity aceiteContrato(@PathVariable("id") Long id, @PathParam("aceite") Boolean aceite);
