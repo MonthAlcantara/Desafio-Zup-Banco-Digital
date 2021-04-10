@@ -7,7 +7,6 @@ import io.github.monthalcantara.nossobancodigital.model.Cliente;
 import io.github.monthalcantara.nossobancodigital.model.Endereco;
 import io.github.monthalcantara.nossobancodigital.repository.ClienteRepository;
 import io.github.monthalcantara.nossobancodigital.service.interfaces.ClienteService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -111,10 +110,10 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     private List<ClienteResponseDTO> converteParaListaClienteResponseDTO(List<Cliente> listaClientes) {
-        List<ClienteResponseDTO> listaDto = listaClientes.stream()
-                .map(c -> c.paraResponse() )
+        return listaClientes.stream()
+                .map(Cliente::paraResponse)
                 .collect(Collectors.toList());
-        return listaDto;
+
     }
 
     private Page<ClienteResponseDTO> converteParaPageClienteResponseDTO(Page<Cliente> paginaClientes, Pageable pageable) {
