@@ -2,6 +2,7 @@ package io.github.monthalcantara.nossobancodigital.advice;
 
 import io.github.monthalcantara.nossobancodigital.exception.RecursoNaoEncontradoException;
 import io.github.monthalcantara.nossobancodigital.exception.ViolacaoRegraNegocioException;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MultipartException;
 
 import javax.validation.ConstraintViolationException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,5 +61,19 @@ public class ControllerAdvice {
 
     private ErrosApi transformError(String message) {
         return new ErrosApi(message);
+    }
+
+    class ErrosApi {
+
+        @Getter
+        List<String> erros;
+
+        public ErrosApi(String e) {
+            this.erros = Arrays.asList(e);
+        }
+
+        public ErrosApi(List<String> listErrors) {
+            this.erros = listErrors;
+        }
     }
 }
