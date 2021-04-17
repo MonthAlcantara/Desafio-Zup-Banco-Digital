@@ -17,8 +17,7 @@ public class MaiorIdadeValidator implements ConstraintValidator<MaiorIdade, Loca
     }
 
     @Override
-    public boolean isValid(LocalDate localDate, ConstraintValidatorContext constraintValidatorContext) {
-        LocalDate agora = LocalDate.now();
-        return Period.between(localDate, agora).toTotalMonths() >= 216;
+    public boolean isValid(LocalDate dataDeNascimento, ConstraintValidatorContext constraintValidatorContext) {
+        return Period.between(dataDeNascimento, LocalDate.now()).toTotalMonths() >= 216;
     }
 }
